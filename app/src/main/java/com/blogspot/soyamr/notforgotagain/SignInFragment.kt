@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import kotlinx.android.synthetic.main.fragment_sign_in.view.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -39,6 +41,10 @@ class SignInFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_sign_in, container, false)
 
+        view.toolbar.title = "trueeeee"
+//        val appBarConfiguration = AppBarConfiguration(findNavController().graph)
+//        view.toolbar.setupWithNavController(findNavController(), appBarConfiguration)
+
         view.signInButtonView.setOnClickListener{
             startActivity(Intent(requireContext(), LoggedInHostActivity::class.java))
             activity?.finish()//LIDIA here i am finishing the previous loggedOutHostActivity and
@@ -49,7 +55,7 @@ class SignInFragment : Fragment() {
         view.signUpTextView.setOnClickListener{
             findNavController().navigate(R.id.action_signInFragment_to_signUpFragment)
         }
-
+        activity?.actionBar?.title  = "asfdfasdf"
         return view
     }
 
