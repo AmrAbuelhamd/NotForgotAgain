@@ -5,6 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import kotlinx.android.synthetic.main.fragment_add_note.view.*
+import kotlinx.android.synthetic.main.fragment_sign_in.view.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,7 +42,12 @@ class AddNoteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_note, container, false)
+        val view = inflater.inflate(R.layout.fragment_add_note, container, false)
+//        val appBarConfiguration = AppBarConfiguration(findNavController().graph)
+//
+//        view.toolbar1.setupWithNavController(findNavController(),appBarConfiguration)
+
+        return view;
     }
 
     companion object {
