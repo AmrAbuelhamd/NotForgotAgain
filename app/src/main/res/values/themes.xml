@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.NotForgotAgain" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimary">@color/dark_background</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
@@ -12,11 +12,21 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="backgroundColor">@color/my_white_background</item>
     </style>
 
-    <style name="SplashScreenTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="android:background">@drawable/splash_screen_background</item>
-        <item name="android:windowAnimationStyle">@null</item>
+    <style name="appTheme" parent="Theme.NotForgotAgain" />
+
+    <style name="SplashScreenTheme" parent="Theme.NotForgotAgain">
+        <item name="android:windowBackground">@drawable/splash_screen_background</item>
     </style>
+
+    <style name="myTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/textBlue</item>
+        <item name="hintTextColor">@color/textBlue</item>
+        <item name="boxBackgroundMode">outline</item>
+    </style>
+
+
 
 </resources>

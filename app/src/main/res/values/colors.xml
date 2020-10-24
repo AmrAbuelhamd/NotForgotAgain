@@ -8,6 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="my_white_background">#E5E5E5</color>
     <color name="dark_background">#292929</color>
+    <color name="textBlue">#1554F6</color>
+    <color name="mygrey">#EFEFEF</color>
 
 </resources>

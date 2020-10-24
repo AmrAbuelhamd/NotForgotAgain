@@ -1,6 +1,7 @@
 package com.blogspot.soyamr.notforgotagain
 
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +17,10 @@ class FavAdapter(val recipes: List<Recipe>, private val listener: (Int) -> Unit)
 
     class ViewHolderHeader(val viewItem: View, private val listener: (Int) -> Unit) :
         RecyclerView.ViewHolder(viewItem) {
-        val textView3 = viewItem.notesHeadTextView
+        val headerTextView = viewItem.headerTextView
 
         fun setCallDetails(recipe: Recipe) {
-            textView3.text = recipe.str1
+            headerTextView.text = recipe.str1
         }
 
         init {
@@ -29,16 +30,14 @@ class FavAdapter(val recipes: List<Recipe>, private val listener: (Int) -> Unit)
     class ViewHolderDetails(val viewItem: View, private val listener: (Int) -> Unit) :
         RecyclerView.ViewHolder(viewItem) {
         fun setNoteDetails(recipe: Recipe) {
-            imageView.setImageResource(recipe.img)
-           name.text = recipe.name
-           textView2.text = recipe.str1
-           textView3.text = recipe.str2
+           titleTextView.text = recipe.name
+            subtitleTextView.text = recipe.str1
+
         }
 
-        val imageView = viewItem.favImageView
-        val name = viewItem.nameTV
-        val textView2 = viewItem.favTV2
-        val textView3 = viewItem.favTV3
+        val titleTextView = viewItem.titleTextView
+        val subtitleTextView = viewItem.subTitleTextView
+//        val textView3 = viewItem.favTV3
 
         init {
             viewItem.setOnClickListener { listener(adapterPosition) }

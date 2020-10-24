@@ -1,6 +1,5 @@
 package com.blogspot.soyamr.notforgotagain
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -19,7 +18,7 @@ class SignInFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setActionBar(view)
-        setButtonsClicks()
+        setOnClickListeners()
     }
 
     private fun setActionBar(view: View) {
@@ -30,25 +29,28 @@ class SignInFragment : Fragment() {
             requireActivity() as AppCompatActivity,
             findNavController()
         )
-        toolbar.title = "sign in"
+        toolbar.title = getString(R.string.sign_in)
     }
 
-    private fun setButtonsClicks() {
-        signInButtonView.setOnClickListener() {
-            startActivity(Intent(requireContext(), LoggedInHostActivity::class.java))
-            activity?.finish()//LIDIA here i am finishing the previous loggedOutHostActivity and
-            //  removing it from stack, so that pressing back will not take me
-            //  back to log or sign in screens
-        }
+    private fun setOnClickListeners() {
+        //Lidia i am making use of all functions of nav component
+        // -  type-safe navigation between destinations.
+        //  the new way of navigation also it guarantees compile-time safety.
 
-        signUpTextView.setOnClickListener(
-            Navigation.createNavigateOnClickListener(//Lidia i am making use of all functions of nav component
+        signInButtonView.setOnClickListener(
+            Navigation.createNavigateOnClickListener(
+                SignInFragmentDirections.actionSignInFragmentToNotesBoardFragment()
+            )
+        )
+
+        createAccountTextView.setOnClickListener(
+            Navigation.createNavigateOnClickListener(
                 SignInFragmentDirections.actionSignInFragmentToSignUpFragment()
             )
         )
     }
 
-    override fun onCreateView(
+    override fun onCreateView( //lidia - now my code is divided inside oncreate view and onciewcreated
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {

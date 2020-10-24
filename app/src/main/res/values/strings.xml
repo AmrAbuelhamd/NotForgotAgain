@@ -1,5 +1,33 @@
 <resources>
-    <string name="app_name">NotForgotAgain</string>
+    <string name="app_name">Not Forgot</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_note">Добавить заметку</string>
+    <string name="sign_in">Войти</string>
+    <string name="no_account">Нет аккаунта?</string>
+    <string name="create_one">Зарегистрироваться</string>
+    <string name="email">Электронная почта</string>
+    <string name="emailEnglish">Email</string>
+    <string name="name">Имя</string>
+    <string name="password">Пароль</string>
+    <string name="repeatPassowrd">Повторите пароль</string>
+    <string name="create">Создать</string>
+    <string name="haveaccount">Есть аккаунт?</string>
+    <string name="createaccount">Создать аккаунт</string>
+    <string name="nothingtoShowText">Пока что у вас нет никаких дел.<br/>    Хорошего отдыха!</string>
+    <string name="header">Заголовок</string>
+    <string name="description">Описание</string>
+    <string name="deadline">Срок выполнения задачи</string>
+    <string name="save">сохранить</string>
+
+    <string-array name="planets_array">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
 </resources>
