@@ -12,5 +12,6 @@
     <color name="dark_background">#292929</color>
     <color name="textBlue">#1554F6</color>
     <color name="mygrey">#EFEFEF</color>
+    <color name="green">#52CC57</color>
 
 </resources>

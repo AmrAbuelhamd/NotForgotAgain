@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_note_details.view.*
 import kotlinx.android.synthetic.main.item_note_header.view.*
@@ -21,6 +22,7 @@ class FavAdapter(val recipes: List<Recipe>, private val listener: (Int) -> Unit)
 
         fun setCallDetails(recipe: Recipe) {
             headerTextView.text = recipe.str1
+            viewItem.setBackgroundColor(viewItem.resources.getColor(R.color.design_default_color_secondary_variant))
         }
 
         init {
@@ -32,6 +34,9 @@ class FavAdapter(val recipes: List<Recipe>, private val listener: (Int) -> Unit)
         fun setNoteDetails(recipe: Recipe) {
            titleTextView.text = recipe.name
             subtitleTextView.text = recipe.str1
+
+            val cardView = viewItem.cardView as CardView
+            cardView.setCardBackgroundColor(viewItem.resources.getColor(R.color.green))
 
         }
 
