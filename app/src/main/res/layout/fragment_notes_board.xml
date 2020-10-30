@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".NotesBoardFragment">
 
-    <include layout="@layout/toolbar_general"
+    <include layout="@layout/toolbar_application"
         android:id="@+id/toolbarView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

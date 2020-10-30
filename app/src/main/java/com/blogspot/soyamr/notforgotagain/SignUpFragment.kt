@@ -1,17 +1,17 @@
 package com.blogspot.soyamr.notforgotagain
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
+import com.blogspot.soyamr.notforgotagain.model.NotesDataBase
+import com.blogspot.soyamr.notforgotagain.model.User
 import kotlinx.android.synthetic.main.fragment_sign_up.*
-import kotlinx.android.synthetic.main.fragment_sign_up.view.*
 
 
 class SignUpFragment : Fragment() {
@@ -21,6 +21,7 @@ class SignUpFragment : Fragment() {
         setListeners()
         setActionBar(view)
     }
+
     private fun setActionBar(view: View) {
         // Set the Toolbar as your fragment's ActionBar
         val toolbar = view.findViewById<Toolbar>(R.id.my_toolbar);
@@ -29,11 +30,19 @@ class SignUpFragment : Fragment() {
     }
 
     private fun setListeners() {
-        signUpButtonView.setOnClickListener(
+        signUpButtonView.setOnClickListener {
+            val user = User(
+                nameSignUpTextInputLayout.editText?.text.toString().trim(),
+                emailSignUpTextInputLayout.editText?.text.toString().trim(),
+                passwordSignUpTextInputLayout.editText?.text.toString().trim()
+            )
+            val userDao = NotesDataBase.getDatabase(requireActivity()).userDao()
             Navigation.createNavigateOnClickListener(
                 SignUpFragmentDirections.actionSignUpFragmentToSignInFragment()
             )
-        )
+            userDao.insertUser(user)
+            findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSignInFragment())
+        }
 
         signInTextView.setOnClickListener(
             Navigation.createNavigateOnClickListener(

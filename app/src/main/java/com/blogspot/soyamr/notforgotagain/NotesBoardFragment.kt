@@ -1,15 +1,14 @@
 package com.blogspot.soyamr.notforgotagain
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_notes_board.*
 
@@ -64,7 +63,10 @@ class NotesBoardFragment : Fragment() {
 //                putExtra("recipe", recipe[position])
 //            }
 //            startActivity(intent)
-            findNavController().navigate(R.id.action_notesBoardFragment_to_addNoteFragment)
+//            Navigation.createNavigateOnClickListener(
+//                NotesBoardFragmentDirections.actionNotesBoardFragmentToNoteDetailsFragment()
+//            )
+            findNavController().navigate(R.id.action_notesBoardFragment_to_noteDetailsFragment)
         }
 
         val myViewManager = LinearLayoutManager(context)

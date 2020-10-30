@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".AddNoteFragment">
 
-    <include layout="@layout/toolbar_general"
+    <include layout="@layout/toolbar_application"
         android:id="@+id/afsaa"/>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -58,7 +58,7 @@
         android:layout_marginEnd="24dp"
         android:background="@drawable/custom_spn_background"
         android:elevation="5dp"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton2"
+        app:layout_constraintEnd_toStartOf="@+id/addCategoryButtonView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textInputLayout9">
 
@@ -68,19 +68,38 @@
             android:layout_height="match_parent" />
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/framlayout2"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/custom_spn_background"
+        android:elevation="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/frameLayout">
+
+        <Spinner
+            android:id="@+id/spinner4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout9"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="24dp"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton3"
+        app:layout_constraintEnd_toStartOf="@+id/showCalendarButtonView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout8"
         >
 
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/dateEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/deadline"
@@ -89,7 +108,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/saveDataButtonView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/save"
@@ -99,7 +118,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/addCategoryButtonView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -111,7 +130,7 @@
         app:layout_constraintTop_toTopOf="@+id/frameLayout" />
 
     <ImageButton
-        android:id="@+id/imageButton3"
+        android:id="@+id/showCalendarButtonView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -121,7 +140,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/textInputLayout9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textInputLayout9" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

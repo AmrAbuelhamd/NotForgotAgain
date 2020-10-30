@@ -5,12 +5,15 @@ import android.os.Bundle
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import com.blogspot.soyamr.notforgotagain.model.NotesDataBase
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setTheme(R.style.appTheme)//lidia no additional activities for splashscreen
-        super.onCreate(savedInstanceState)//lidia actually it's the only activity i have in this application
+        setTheme(R.style.appTheme)
+        super.onCreate(savedInstanceState)
+
+
         setContentView(R.layout.activity_main)
 
     }

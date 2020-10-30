@@ -26,3 +26,55 @@ second
      return Navigation.findNavController(this, R.id.main_fragment).navigateUp()
              || super.onSupportNavigateUp();
  }
+
+
+
+ to change the stroke color of textinput layout i can do this
+ - create color resource folder
+ - create selector with two states
+ <selector xmlns:android="http://schemas.android.com/apk/res/android">
+     <item android:color="@color/textBlue" android:state_focused="true" />
+     <item android:color="@color/textBlue" android:state_focused="false" />
+ </selector>
+ - then use it in the stroke color attribute.
+
+ https://stackoverflow.com/questions/56292017/textinputlayout-box-color
+
+
+
+dismiss dialog
+https://stackoverflow.com/questions/56884167/dialogfragment-does-not-dismiss-when-using-navigation-components
+
+important tutorial about nav component
+https://www.raywenderlich.com/4332831-navigation-component-for-android-part-2-graphs-and-deep-links
+
+fragments pass-data-between
+https://developer.android.com/training/basics/fragments/pass-data-between
+
+important about dialoge and comments in this thread are important
+https://stackoverflow.com/questions/50311637/navigation-architecture-component-dialog-fragments
+
+
+get result with live data
+https://developer.android.com/guide/navigation/navigation-programmatic#returning_a_result
+
+
+Android Navigation Architecture Component - setTargetFragment for DialogFragment #
+https://github.com/android/architecture-components-samples/issues/750
+
+
+using-dialogfragment#custom
+https://guides.codepath.com/android/using-dialogfragment#custom-view
+
+
+https://stackoverflow.com/questions/50328941/navigation-architecture-component-action-navigation-with-lambda-expression
+
+
+https://stackoverflow.com/questions/55027609/displaying-datepickerdialog-in-a-fragment
+
+
+https://developer.android.com/guide/topics/ui/look-and-feel/themes
+
+
+code to look at later
+https://github.com/android/architecture-components-samples
