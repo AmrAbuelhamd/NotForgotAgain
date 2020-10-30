@@ -78,3 +78,10 @@ https://developer.android.com/guide/topics/ui/look-and-feel/themes
 
 code to look at later
 https://github.com/android/architecture-components-samples
+
+
+https://www.raywenderlich.com/262-dependency-injection-in-android-with-dagger-2-and-kotlin
+https://medium.com/@marco_cattaneo/integrate-dagger-2-with-room-persistence-library-in-few-lines-abf48328eaeb
+https://stackoverflow.com/questions/44615986/setting-modules-and-components-with-dagger-2-for-android-mvp-activity-with-mul
+https://medium.com/@MiBLT/refactoring-to-mvp-with-dagger-part-2-838c6e089a1
+https://startandroid.ru/en/18-courses/dagger-2/432-lesson-1-introduction.html [[impo]]

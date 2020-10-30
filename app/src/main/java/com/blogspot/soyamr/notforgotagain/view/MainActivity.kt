@@ -1,11 +1,8 @@
-package com.blogspot.soyamr.notforgotagain
+package com.blogspot.soyamr.notforgotagain.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
-import com.blogspot.soyamr.notforgotagain.model.NotesDataBase
+import com.blogspot.soyamr.notforgotagain.R
 
 class MainActivity : AppCompatActivity() {
 

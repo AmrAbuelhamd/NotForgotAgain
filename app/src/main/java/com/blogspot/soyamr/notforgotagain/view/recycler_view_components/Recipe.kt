@@ -1,4 +1,4 @@
-package com.blogspot.soyamr.notforgotagain
+package com.blogspot.soyamr.notforgotagain.view.recycler_view_components
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

@@ -1,4 +1,4 @@
-package com.blogspot.soyamr.notforgotagain
+package com.blogspot.soyamr.notforgotagain.view.signup
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,8 +9,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import com.blogspot.soyamr.notforgotagain.R
 import com.blogspot.soyamr.notforgotagain.model.NotesDataBase
 import com.blogspot.soyamr.notforgotagain.model.User
+import com.blogspot.soyamr.notforgotagain.view.SignUpFragmentDirections
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 
 

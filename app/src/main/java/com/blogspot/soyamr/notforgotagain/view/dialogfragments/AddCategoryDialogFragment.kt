@@ -1,4 +1,4 @@
-package com.blogspot.soyamr.notforgotagain
+package com.blogspot.soyamr.notforgotagain.view.dialogfragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
+import com.blogspot.soyamr.notforgotagain.R
+import com.blogspot.soyamr.notforgotagain.view.AddNoteFragment
 import kotlinx.android.synthetic.main.dialogfragment_add_category.*
 
 class AddCategoryDialogFragment : DialogFragment() {

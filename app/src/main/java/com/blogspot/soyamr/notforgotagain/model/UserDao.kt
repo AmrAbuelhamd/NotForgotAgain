@@ -11,16 +11,16 @@ interface UserDao {
     fun getAll(): List<User>
 
     @Query("SELECT uid FROM user WHERE signedIn = 1")
-    fun getSignedInUser(): Int
+    fun getSignedInUser(): Long
 
     @Query("UPDATE user set signedIn = 0 where uid = :id")
-    fun signOutUser(id: Int)
+    fun signOutUser(id: Long)
 
     @Query("UPDATE user set signedIn = 1 where uid = :id")
-    fun signInUser(id: Int)
+    fun signInUser(id: Long)
 
     @Query("SELECT uid FROM user WHERE email like :email AND password like :password")
-    fun doWeHaveSuchUser(email: String, password: String): Int
+    fun doWeHaveSuchUser(email: String, password: String): Long
 
     @Insert
     fun insertUser(user: User)

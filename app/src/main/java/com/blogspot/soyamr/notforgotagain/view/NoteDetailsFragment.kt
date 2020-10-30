@@ -1,4 +1,4 @@
-package com.blogspot.soyamr.notforgotagain
+package com.blogspot.soyamr.notforgotagain.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.blogspot.soyamr.notforgotagain.R
 import kotlinx.android.synthetic.main.fragment_note_details.*
 
 

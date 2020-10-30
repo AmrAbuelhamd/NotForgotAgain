@@ -1,4 +1,4 @@
-package com.blogspot.soyamr.notforgotagain
+package com.blogspot.soyamr.notforgotagain.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,12 +10,19 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blogspot.soyamr.notforgotagain.R
+import com.blogspot.soyamr.notforgotagain.model.NoteRepository
+import com.blogspot.soyamr.notforgotagain.view.recycler_view_components.FavAdapter
+import com.blogspot.soyamr.notforgotagain.view.recycler_view_components.Recipe
 import kotlinx.android.synthetic.main.fragment_notes_board.*
 
 
 class NotesBoardFragment : Fragment() {
 
+    var currentUserId: Long? = 0L
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val args = arguments?.let { NotesBoardFragmentArgs.fromBundle(it) }
+        currentUserId = args?.uId
         setUpToolBar(view)
         setClickListener()
         setupRecyclerView();
@@ -25,6 +32,16 @@ class NotesBoardFragment : Fragment() {
         val toolBar = view.findViewById<Toolbar>(R.id.my_toolbar)
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolBar)
         toolBar.title = getString(R.string.app_name)
+        toolBar.post {
+            toolBar.inflateMenu(R.menu.sign_out)
+        }
+        val repository = NoteRepository(requireContext())
+        toolBar.setOnMenuItemClickListener {
+            findNavController().navigate(NotesBoardFragmentDirections.actionNotesBoardFragmentToSignInFragment())
+            repository.signMeOut(currentUserId!!)
+            true
+        }
+
     }
 
     private fun setClickListener() {

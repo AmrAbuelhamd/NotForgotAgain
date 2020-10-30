@@ -1,7 +1,7 @@
-package com.blogspot.soyamr.notforgotagain
+package com.blogspot.soyamr.notforgotagain.view.signin
 
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,27 +11,22 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.blogspot.soyamr.notforgotagain.model.NotesDataBase
+import com.blogspot.soyamr.notforgotagain.R
+import com.blogspot.soyamr.notforgotagain.view.dialogfragments.LoadingDialogFragment
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 
 
-class SignInFragment : Fragment() {
+class SignInFragment : Fragment(), SignInView {
 
-
+    private lateinit var presenter: SignInPresenter
+//    lateinit var loadingDialogFragment: LoadingDialogFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        checkSignedIn()
+        presenter = SignInPresenter(this)
+//        loadingDialogFragment = LoadingDialogFragment(requireContext())
+        presenter.checkSignedIn()
+
         setActionBar(view)
         setOnClickListeners()
-    }
-
-    private fun checkSignedIn() {
-        val userDao = NotesDataBase.getDatabase(requireActivity()).userDao()
-        val id = userDao.getSignedInUser()
-        Log.i("dIdSign ", "" + id)
-        if (id != 0)
-            findNavController().navigate(
-                SignInFragmentDirections.actionSignInFragmentToNotesBoardFragment()
-            )
     }
 
     private fun setActionBar(view: View) {
@@ -49,19 +44,7 @@ class SignInFragment : Fragment() {
         signInButtonView.setOnClickListener {
             val email = emailTextInputLayout.editText?.text.toString().trim()
             val password = passwordTextInputLayout.editText?.text.toString().trim()
-            val userDao = NotesDataBase.getDatabase(requireActivity()).userDao()
-            val id = userDao.doWeHaveSuchUser(email, password)
-            Log.i("dId ",""+id)
-            Log.i("demail ",""+email)
-            Log.i("dpassword ",""+password)
-            if (id == 1)
-                findNavController().navigate(
-                    SignInFragmentDirections.actionSignInFragmentToNotesBoardFragment()
-                )
-            else
-            {
-                emailTextInputLayout.error = "doesn't exist"
-            }
+            presenter.signIn(email, password)
         }
 
         createAccountTextView.setOnClickListener(
@@ -71,11 +54,33 @@ class SignInFragment : Fragment() {
         )
     }
 
-    override fun onCreateView( //lidia - now my code is divided inside oncreate view and onciewcreated
+    override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_sign_in, container, false)
+    }
+
+    override fun getRequiredContext(): Context {
+        return requireContext()
+    }
+
+    override fun moveToNoteBoard(userId: Long) {
+        findNavController().navigate(
+            SignInFragmentDirections.actionSignInFragmentToNotesBoardFragment(userId)
+        )
+    }
+
+    override fun setSignInError() {
+        emailTextInputLayout.error = "wrong user name or password"
+    }
+
+    override fun showProgressBar() {
+//        loadingDialogFragment.show()
+    }
+
+    override fun hidProgressBar() {
+//        loadingDialogFragment.hide()
     }
 }

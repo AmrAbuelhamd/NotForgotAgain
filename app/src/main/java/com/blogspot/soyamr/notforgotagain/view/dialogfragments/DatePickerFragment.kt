@@ -1,4 +1,4 @@
-package com.blogspot.soyamr.notforgotagain
+package com.blogspot.soyamr.notforgotagain.view.dialogfragments
 
 
 import android.annotation.SuppressLint
@@ -10,6 +10,7 @@ import androidx.annotation.Nullable
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
+import com.blogspot.soyamr.notforgotagain.view.AddNoteFragment
 import java.text.SimpleDateFormat
 import java.util.*
 

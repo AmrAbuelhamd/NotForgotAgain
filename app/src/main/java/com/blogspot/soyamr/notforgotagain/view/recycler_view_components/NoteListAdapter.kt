@@ -1,4 +1,4 @@
-package com.blogspot.soyamr.notforgotagain
+package com.blogspot.soyamr.notforgotagain.view.recycler_view_components
 
 
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.blogspot.soyamr.notforgotagain.R
 import kotlinx.android.synthetic.main.item_note_details.view.*
 import kotlinx.android.synthetic.main.item_note_header.view.*
 

@@ -1,4 +1,4 @@
-package com.blogspot.soyamr.notforgotagain
+package com.blogspot.soyamr.notforgotagain.view
 
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +14,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.blogspot.soyamr.notforgotagain.R
 import kotlinx.android.synthetic.main.fragment_add_note.*
 
 
@@ -33,7 +34,7 @@ class AddNoteFragment : Fragment() {
     private fun setListeners() {
         saveDataButtonView.setOnClickListener(
             Navigation.createNavigateOnClickListener(
-                AddNoteFragmentDirections.actionAddNoteFragmentToNotesBoardFragment()
+                AddNoteFragmentDirections.actionAddNoteFragmentToNotesBoardFragment(-5)
             )
         )
         // Use the Kotlin extension in the fragment-ktx artifact

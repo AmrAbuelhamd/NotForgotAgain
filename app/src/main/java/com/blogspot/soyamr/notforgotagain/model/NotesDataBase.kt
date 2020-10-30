@@ -4,10 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import dagger.Provides
 
-@Database(entities = arrayOf(User::class), version = 1, exportSchema = false)
+@Database(entities = [User::class], version = 1, exportSchema = false)
 public abstract class  NotesDataBase : RoomDatabase() {
-    abstract fun userDao(): UserDao
+
+    public abstract fun userDao(): UserDao
 
     companion object {
         // Singleton prevents multiple instances of database opening at the
