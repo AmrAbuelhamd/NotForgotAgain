@@ -25,4 +25,10 @@ object NoteRepository {
         userDao.signOutUser(currentUserId)
     }
 
+    fun insetUser(name: String, email: String, password: String) {
+        val user = User(name, email, password)
+        userDao.insertUser(user)
+    }
+
+
 }

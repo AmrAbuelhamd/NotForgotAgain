@@ -1,5 +1,6 @@
 package com.blogspot.soyamr.notforgotagain.view.signup
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +11,15 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.blogspot.soyamr.notforgotagain.R
-import com.blogspot.soyamr.notforgotagain.model.NotesDataBase
-import com.blogspot.soyamr.notforgotagain.model.User
-import com.blogspot.soyamr.notforgotagain.view.SignUpFragmentDirections
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 
 
-class SignUpFragment : Fragment() {
+class SignUpFragment : Fragment(), SignUpView {
+    private lateinit var presenter: SignUpPresenter
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        presenter = SignUpPresenter(this)
         setListeners()
         setActionBar(view)
     }
@@ -33,17 +33,12 @@ class SignUpFragment : Fragment() {
 
     private fun setListeners() {
         signUpButtonView.setOnClickListener {
-            val user = User(
-                nameSignUpTextInputLayout.editText?.text.toString().trim(),
-                emailSignUpTextInputLayout.editText?.text.toString().trim(),
-                passwordSignUpTextInputLayout.editText?.text.toString().trim()
-            )
-            val userDao = NotesDataBase.getDatabase(requireActivity()).userDao()
-            Navigation.createNavigateOnClickListener(
-                SignUpFragmentDirections.actionSignUpFragmentToSignInFragment()
-            )
-            userDao.insertUser(user)
-            findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSignInFragment())
+
+            val name = nameSignUpTextInputLayout.editText?.text.toString().trim()
+            val email = emailSignUpTextInputLayout.editText?.text.toString().trim()
+            val password = passwordSignUpTextInputLayout.editText?.text.toString().trim()
+
+            presenter.insertUser(name, email, password)
         }
 
         signInTextView.setOnClickListener(
@@ -58,5 +53,13 @@ class SignUpFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_sign_up, container, false);
+    }
+
+    override fun getRequiredContext(): Context {
+        return requireContext()
+    }
+
+    override fun goToLogInScreen() {
+        findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSignInFragment())
     }
 }
