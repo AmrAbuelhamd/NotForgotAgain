@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blogspot.soyamr.notforgotagain.R
+import com.blogspot.soyamr.notforgotagain.model.NoteBoss
+import com.blogspot.soyamr.notforgotagain.model.NoteHeader
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import com.blogspot.soyamr.notforgotagain.view.recycler_view_components.NoteAdapter
 import com.blogspot.soyamr.notforgotagain.view.recycler_view_components.Recipe
@@ -18,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_notes_board.*
 
 
 class NotesBoardFragment : Fragment() {
-
+    var notes = ArrayList<NoteBoss>()
     var currentUserId: Long? = 0L
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val args = arguments?.let { NotesBoardFragmentArgs.fromBundle(it) }

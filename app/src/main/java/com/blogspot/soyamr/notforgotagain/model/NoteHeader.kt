@@ -1,6 +1,7 @@
 package com.blogspot.soyamr.notforgotagain.model
 
-import java.util.*
+import com.blogspot.soyamr.notforgotagain.model.tables.Category
 
-class NoteHeader(val category: Locale.Category): NoteBoss() {
+
+class NoteHeader(val category: Category): NoteBoss() {
 }

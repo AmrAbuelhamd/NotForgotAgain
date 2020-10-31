@@ -5,19 +5,16 @@ class SignInPresenter(val signInView: SignInView) : SignInInteractor.OnLoginFini
 
     fun signIn(email: String, password: String) {
         signInInteractor.signIn(email, password)
-//        signInView.showProgressBar()
     }
 
     override fun onSignInError() {
         signInView.apply {
             setSignInError()
-//            hidProgressBar()
         }
     }
 
     override fun onSuccess(userId: Long) {
         signInView.moveToNoteBoard(userId)
-//        signInView.hidProgressBar()
     }
 
     fun checkSignedIn() {

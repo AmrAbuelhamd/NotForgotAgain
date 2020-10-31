@@ -19,10 +19,8 @@ import kotlinx.android.synthetic.main.fragment_sign_in.*
 class SignInFragment : Fragment(), SignInView {
 
     private lateinit var presenter: SignInPresenter
-//    lateinit var loadingDialogFragment: LoadingDialogFragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter = SignInPresenter(this)
-//        loadingDialogFragment = LoadingDialogFragment(requireContext())
         presenter.checkSignedIn()
 
         setActionBar(view)

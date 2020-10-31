@@ -7,6 +7,11 @@ import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.blogspot.soyamr.notforgotagain.R
+import com.blogspot.soyamr.notforgotagain.model.NoteBoss
+import com.blogspot.soyamr.notforgotagain.model.NoteDetails
+import com.blogspot.soyamr.notforgotagain.model.NoteHeader
+import com.blogspot.soyamr.notforgotagain.model.tables.Category
+import com.blogspot.soyamr.notforgotagain.model.tables.Note
 import kotlinx.android.synthetic.main.item_note_details.view.*
 import kotlinx.android.synthetic.main.item_note_header.view.*
 
