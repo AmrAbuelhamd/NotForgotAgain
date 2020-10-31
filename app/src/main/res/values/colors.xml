@@ -14,8 +14,7 @@
     <color name="mygrey">#EFEFEF</color>
     <color name="green">#52CC57</color>
     <color name="descriptionTextColor">#DE000000</color>
-
-
+    <color name="red">#FF1100</color>
 
 
 </resources>

@@ -26,7 +26,7 @@ class NoteAdapter(val notes: ArrayList<NoteBoss>, private val listener: (Long) -
 
         fun setHeader(category: Category) {
             headerTextView.text = category.name
-            viewItem.setBackgroundColor(viewItem.resources.getColor(R.color.design_default_color_secondary_variant))
+            //viewItem.setBackgroundColor(viewItem.resources.getColor(R.color.design_default_color_secondary_variant))
         }
     }
 
@@ -37,7 +37,12 @@ class NoteAdapter(val notes: ArrayList<NoteBoss>, private val listener: (Long) -
             subtitleTextView.text = note.description
 
             val cardView = viewItem.cardView as CardView
-            cardView.setCardBackgroundColor(viewItem.resources.getColor(R.color.green))
+            when (note.pid){
+                1L-> cardView.setCardBackgroundColor(viewItem.resources.getColor(R.color.green))
+                2L-> cardView.setCardBackgroundColor(viewItem.resources.getColor(R.color.red))
+                3L-> cardView.setCardBackgroundColor(viewItem.resources.getColor(R.color.textBlue))
+            }
+
             viewItem.setOnClickListener { listener(note.nid) }
         }
 

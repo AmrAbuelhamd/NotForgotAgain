@@ -56,53 +56,6 @@ class NotesBoardFragment : Fragment() {
         }
     }
 
-//    private fun setupRecyclerView() {
-//        val recipe = listOf(
-//            Recipe("Тыквенный суп со вкусом карри", R.drawable.fav1, "4 порции", "25 мин"),
-//            Recipe("Салат Цезарь с чесночным соусом", R.drawable.fav2, "4 порции", "35 мин"),
-//            Recipe("Классический чизкейк", R.drawable.fav3, "12 порции", "1ч 45 мин"),
-//            Recipe("Фрикадельки по-шведски", R.drawable.fav4, "4 порции", "25 мин"),
-//            Recipe("Имбирное печенье с ванильным сахаром", R.drawable.fav5, "4 порции", "25 мин"),
-//            Recipe("Тыквенный суп со вкусом карри", R.drawable.fav1, "4 порции", "25 мин"),
-//            Recipe("Тыквенный суп со вкусом карри", R.drawable.fav1, "4 порции", "25 мин"),
-//            Recipe("Салат Цезарь с чесночным соусом", R.drawable.fav2, "4 порции", "35 мин"),
-//            Recipe("Классический чизкейк", R.drawable.fav3, "12 порции", "1ч 45 мин"),
-//            Recipe("Фрикадельки по-шведски", R.drawable.fav4, "4 порции", "25 мин"),
-//            Recipe("Имбирное печенье с ванильным сахаром", R.drawable.fav5, "4 порции", "25 мин"),
-//            Recipe("Тыквенный суп со вкусом карри", R.drawable.fav1, "4 порции", "25 мин"),
-//            Recipe("Тыквенный суп со вкусом карри", R.drawable.fav1, "4 порции", "25 мин"),
-//            Recipe("Тыквенный суп со вкусом карри", R.drawable.fav1, "4 порции", "25 мин"),
-//            Recipe("Салат Цезарь с чесночным соусом", R.drawable.fav2, "4 порции", "35 мин"),
-//            Recipe("Классический чизкейк", R.drawable.fav3, "12 порции", "1ч 45 мин"),
-//            Recipe("Фрикадельки по-шведски", R.drawable.fav4, "4 порции", "25 мин"),
-//            Recipe("Имбирное печенье с ванильным сахаром", R.drawable.fav5, "4 порции", "25 мин"),
-//            Recipe("Тыквенный суп со вкусом карри", R.drawable.fav1, "4 порции", "25 мин")
-//        )
-//
-//        val myAdapter = NoteAdapter(recipe) { position ->
-////            val intent = Intent(context, LoggedInFavoriteItemFragment::class.java).apply {
-////                putExtra("recipe", recipe[position])
-////            }
-////            startActivity(intent)
-////            Navigation.createNavigateOnClickListener(
-////                NotesBoardFragmentDirections.actionNotesBoardFragmentToNoteDetailsFragment()
-////            )
-//            findNavController().navigate(
-//                NotesBoardFragmentDirections.actionNotesBoardFragmentToNoteDetailsFragment(
-//                    0L
-//                )
-//            )
-//        }
-//
-//        val myViewManager = LinearLayoutManager(context)
-//        val recyclerView = notesRecycler.apply {
-//            setHasFixedSize(true)
-//            layoutManager = myViewManager
-//            adapter = myAdapter
-//        }
-//
-//
-//    }
 
     lateinit var myAdapter: NoteAdapter
     private fun setupRecyclerView2() {

@@ -33,8 +33,8 @@ class NoteDetailsFragment : Fragment() {
         mytitleTextView.text = note.title
         categoryTextView.text = category.name
         descTextView.text = note.description
-        dateTextView.text = note.date
-        isDoneTextView.text = if(note.isDone) "done" else "no"
+        dateTextView.text = note.date.toString()
+        isDoneTextView.text = if(note.isDone) "Выполнено" else "no"
     }
 
     private fun setUpToolBar(view: View) {
@@ -49,7 +49,7 @@ class NoteDetailsFragment : Fragment() {
     private fun setClicks() {
         editNoteImageView.setOnClickListener(
             Navigation.createNavigateOnClickListener(
-                NoteDetailsFragmentDirections.actionNoteDetailsFragmentToAddNoteFragment(1)//todo send id
+                NoteDetailsFragmentDirections.actionNoteDetailsFragmentToAddNoteFragment(currentNote!!)//todo send id
             )
         )
     }

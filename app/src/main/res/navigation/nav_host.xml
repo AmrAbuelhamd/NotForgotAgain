@@ -70,6 +70,10 @@
         <argument
             android:name="uid"
             app:argType="long" />
+        <argument
+            android:name="nid"
+            app:argType="long"
+            android:defaultValue="-1L" />
     </fragment>
     <fragment
         android:id="@+id/noteDetailsFragment"
