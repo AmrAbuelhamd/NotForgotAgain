@@ -8,8 +8,6 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.blogspot.soyamr.notforgotagain.R
 import com.blogspot.soyamr.notforgotagain.model.NoteBoss
-import com.blogspot.soyamr.notforgotagain.model.NoteDetails
-import com.blogspot.soyamr.notforgotagain.model.NoteHeader
 import com.blogspot.soyamr.notforgotagain.model.tables.Category
 import com.blogspot.soyamr.notforgotagain.model.tables.Note
 import kotlinx.android.synthetic.main.item_note_details.view.*
@@ -19,45 +17,37 @@ import kotlinx.android.synthetic.main.item_note_header.view.*
 private const val DETAILS_TYPE = 1
 private const val HEADER_TYPE = 2
 
-class NoteAdapter(val recipes: List<Recipe>, private val listener: (Int) -> Unit) :
+class NoteAdapter(val notes: ArrayList<NoteBoss>, private val listener: (Long) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    class ViewHolderHeader(val viewItem: View, private val listener: (Int) -> Unit) :
+    class ViewHolderHeader(val viewItem: View) :
         RecyclerView.ViewHolder(viewItem) {
         val headerTextView = viewItem.headerTextView
 
-        fun setCallDetails(recipe: Recipe) {
-            headerTextView.text = recipe.str1
+        fun setHeader(category: Category) {
+            headerTextView.text = category.name
             viewItem.setBackgroundColor(viewItem.resources.getColor(R.color.design_default_color_secondary_variant))
-        }
-
-        init {
-            viewItem.setOnClickListener { listener(adapterPosition) }
         }
     }
 
-    class ViewHolderDetails(val viewItem: View, private val listener: (Int) -> Unit) :
+    class ViewHolderDetails(val viewItem: View, private val listener: (Long) -> Unit) :
         RecyclerView.ViewHolder(viewItem) {
-        fun setNoteDetails(recipe: Recipe) {
-            titleTextView.text = recipe.name
-            subtitleTextView.text = recipe.str1
+        fun setNoteDetails(note: Note) {
+            titleTextView.text = note.title
+            subtitleTextView.text = note.description
 
             val cardView = viewItem.cardView as CardView
             cardView.setCardBackgroundColor(viewItem.resources.getColor(R.color.green))
-
+            viewItem.setOnClickListener { listener(note.nid) }
         }
 
         val titleTextView = viewItem.titleTextView
         val subtitleTextView = viewItem.subTitleTextView
-//        val textView3 = viewItem.favTV3
 
-        init {
-            viewItem.setOnClickListener { listener(adapterPosition) }
-        }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (recipes[position].str1 == "4 порции") {
+        return if (notes[position].category == null) {
             DETAILS_TYPE;
         } else {
             HEADER_TYPE;
@@ -73,21 +63,21 @@ class NoteAdapter(val recipes: List<Recipe>, private val listener: (Int) -> Unit
         } else { // for email layout
             view1 = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_note_header, parent, false)
-            ViewHolderHeader(view1, listener)
+            ViewHolderHeader(view1)
         }
 
     }
 
 
     override fun getItemCount(): Int {
-        return recipes.size
+        return notes.size
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (getItemViewType(position) == HEADER_TYPE) {
-            (holder as ViewHolderHeader).setCallDetails(recipes[position])
+            (holder as ViewHolderHeader).setHeader(notes[position].category!!)
         } else {
-            (holder as ViewHolderDetails).setNoteDetails(recipes[position])
+            (holder as ViewHolderDetails).setNoteDetails(notes[position].note!!)
         }
     }
 

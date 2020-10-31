@@ -71,5 +71,9 @@ object NoteRepository {
 
     }
 
+    fun getnotes(currentUserId: Long?): List<Note> {
+        return noteDao.getAll(currentUserId!!)
+    }
+
 
 }

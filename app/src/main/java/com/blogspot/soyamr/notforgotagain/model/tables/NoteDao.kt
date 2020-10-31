@@ -8,7 +8,7 @@ import androidx.room.Query
 
 @Dao
 interface NoteDao {
-    @Query("SELECT * FROM note where uid = :uid")
+    @Query("SELECT * FROM note where uid = :uid order by cid")
     fun getAll(uid: Long): List<Note>
 
     @Query("UPDATE note set isDone = 1 where nid = :nid")

@@ -1,4 +1,8 @@
 package com.blogspot.soyamr.notforgotagain.model
 
-open class NoteBoss {
+import com.blogspot.soyamr.notforgotagain.model.tables.Category
+import com.blogspot.soyamr.notforgotagain.model.tables.Note
+
+class NoteBoss(val note: Note?, val category: Category?) {
+
 }
