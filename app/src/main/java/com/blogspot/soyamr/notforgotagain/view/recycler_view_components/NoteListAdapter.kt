@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.item_note_header.view.*
 private const val DETAILS_TYPE = 1
 private const val HEADER_TYPE = 2
 
-class FavAdapter(val recipes: List<Recipe>, private val listener: (Int) -> Unit) :
+class NoteAdapter(val recipes: List<Recipe>, private val listener: (Int) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class ViewHolderHeader(val viewItem: View, private val listener: (Int) -> Unit) :

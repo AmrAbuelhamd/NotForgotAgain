@@ -1,9 +1,6 @@
-package com.blogspot.soyamr.notforgotagain.model
+package com.blogspot.soyamr.notforgotagain.model.tables
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface UserDao {
@@ -22,7 +19,7 @@ interface UserDao {
     @Query("SELECT uid FROM user WHERE email like :email AND password like :password")
     fun doWeHaveSuchUser(email: String, password: String): Long
 
-    @Insert
+    @Insert()
     fun insertUser(user: User)
 
     @Delete

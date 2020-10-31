@@ -9,7 +9,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import com.blogspot.soyamr.notforgotagain.R
-import com.blogspot.soyamr.notforgotagain.view.AddNoteFragment
+import com.blogspot.soyamr.notforgotagain.view.addnote.AddNoteFragment
 import kotlinx.android.synthetic.main.dialogfragment_add_category.*
 
 class AddCategoryDialogFragment : DialogFragment() {

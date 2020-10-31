@@ -6,8 +6,13 @@ class SignUpPresenter(private val signUpView: SignUpView) : SignUpInteractor.OnS
     override fun onSuccess() {
         signUpView.goToLogInScreen()
     }
-    fun insertUser(name: String, email: String, password: String) {
-        signUpInteractor.insertUser(name,email,password)
+
+    override fun onError() {
+        signUpView.setSignUpError()
+    }
+
+    fun insertUser(name: String, email: String, password: String, repeatPassword: String) {
+        signUpInteractor.insertUser(name,email,password,repeatPassword)
     }
 
 }

@@ -21,12 +21,6 @@
             app:popUpTo="@id/signInFragment"
             app:popUpToInclusive="true" />
 
-        <!--
-                -popUpTo-
-        LIDIA here i am finishing all the  previous fragments and
-         removing them from stack, so that pressing back will not take me
-         back to log or sign in screens
-        -->
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -61,7 +55,7 @@
     </fragment>
     <fragment
         android:id="@+id/addNoteFragment"
-        android:name="com.blogspot.soyamr.notforgotagain.view.AddNoteFragment"
+        android:name="com.blogspot.soyamr.notforgotagain.view.addnote.AddNoteFragment"
         android:label="fragment_add_note"
         tools:layout="@layout/fragment_add_note">
         <action
@@ -73,6 +67,9 @@
         <action
             android:id="@+id/action_addNoteFragment_to_addCategoryDialogFragment"
             app:destination="@id/addCategoryDialogFragment" />
+        <argument
+            android:name="uid"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/noteDetailsFragment"

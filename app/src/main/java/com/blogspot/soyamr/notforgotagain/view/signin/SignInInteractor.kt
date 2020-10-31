@@ -4,7 +4,10 @@ import android.content.Context
 import android.util.Log
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 
-class SignInInteractor(private val context: Context, private val listener: OnLoginFinishedListener) {
+class SignInInteractor(
+    private val context: Context,
+    private val listener: OnLoginFinishedListener
+) {
     interface OnLoginFinishedListener {
         fun onSignInError()
         fun onSuccess(userId: Long)
@@ -13,14 +16,16 @@ class SignInInteractor(private val context: Context, private val listener: OnLog
     private val repository = NoteRepository(context)
 
     fun signIn(email: String, password: String) {
-        val id = repository.doWeHaveSuchUser(email, password)
-
-        if (id != 0L) {
-            listener.onSuccess(id)
-            repository.signMeIn(id)
-        }
-        else {
+        if (email.isEmpty() || password.isEmpty())
             listener.onSignInError()
+        else {
+            val id = repository.doWeHaveSuchUser(email, password)
+            if (id != 0L) {
+                listener.onSuccess(id)
+                repository.signMeIn(id)
+            } else {
+                listener.onSignInError()
+            }
         }
     }
 
@@ -28,7 +33,7 @@ class SignInInteractor(private val context: Context, private val listener: OnLog
         val id = repository.getSignedInUser()
         Log.i("dIdSign ", "" + id)
         if (id != 0L)
-           listener.onSuccess(id)
+            listener.onSuccess(id)
 
     }
 

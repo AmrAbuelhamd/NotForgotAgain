@@ -37,8 +37,9 @@ class SignUpFragment : Fragment(), SignUpView {
             val name = nameSignUpTextInputLayout.editText?.text.toString().trim()
             val email = emailSignUpTextInputLayout.editText?.text.toString().trim()
             val password = passwordSignUpTextInputLayout.editText?.text.toString().trim()
+            val repeatPassword = repeatPasswordSignUpTextInputLayout.editText?.text.toString().trim()
 
-            presenter.insertUser(name, email, password)
+            presenter.insertUser(name, email, password,repeatPassword)
         }
 
         signInTextView.setOnClickListener(
@@ -61,5 +62,9 @@ class SignUpFragment : Fragment(), SignUpView {
 
     override fun goToLogInScreen() {
         findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSignInFragment())
+    }
+
+    override fun setSignUpError() {
+        emailSignUpTextInputLayout.error = "somethingwent wrong"
     }
 }

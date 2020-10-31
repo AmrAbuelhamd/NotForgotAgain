@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.AddNoteFragment">
+    tools:context=".view.addnote.AddNoteFragment">
 
-    <include layout="@layout/toolbar_application"
-        android:id="@+id/afsaa"/>
+    <include
+        android:id="@+id/afsaa"
+        layout="@layout/toolbar_application" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout7"
+        android:id="@+id/headerTextLayout"
         style="@style/myTextInputLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +29,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout8"
+        android:id="@+id/descriptionTextLayout"
         style="@style/myTextInputLayoutStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,7 +40,7 @@
         app:counterMaxLength="50"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout7">
+        app:layout_constraintTop_toBottomOf="@+id/headerTextLayout">
 
 
         <com.google.android.material.textfield.TextInputEditText
@@ -60,10 +61,10 @@
         android:elevation="5dp"
         app:layout_constraintEnd_toStartOf="@+id/addCategoryButtonView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textInputLayout9">
+        app:layout_constraintTop_toBottomOf="@id/dateText">
 
         <Spinner
-            android:id="@+id/spinner3"
+            android:id="@+id/categorySpinner"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
@@ -82,37 +83,37 @@
         app:layout_constraintTop_toBottomOf="@id/frameLayout">
 
         <Spinner
-            android:id="@+id/spinner4"
+            android:id="@+id/prioritySpinner"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
+
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout9"
+        android:id="@+id/dateText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="24dp"
         app:layout_constraintEnd_toStartOf="@+id/showCalendarButtonView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout8"
-        >
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTextLayout">
 
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/dateEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/mygrey"
             android:hint="@string/deadline"
-            android:inputType="date"
-            android:background="@color/mygrey"/>
+            android:inputType="date" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/saveDataButtonView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/save"
         android:layout_margin="16dp"
+        android:text="@string/save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -122,8 +123,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:foreground="@android:color/transparent"
         android:background="?attr/selectableItemBackground"
+        android:foreground="@android:color/transparent"
         android:src="@drawable/ic_outline_add_box_24"
         app:layout_constraintBottom_toBottomOf="@+id/frameLayout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -134,12 +135,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:foreground="@android:color/transparent"
         android:background="?attr/selectableItemBackground"
+        android:foreground="@android:color/transparent"
         android:src="@drawable/ic_outline_date_range_24"
-        app:layout_constraintBottom_toBottomOf="@+id/textInputLayout9"
+        app:layout_constraintBottom_toBottomOf="@+id/dateText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textInputLayout9" />
+        app:layout_constraintTop_toTopOf="@+id/dateText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

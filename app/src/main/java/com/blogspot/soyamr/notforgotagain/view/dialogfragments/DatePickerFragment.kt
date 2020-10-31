@@ -10,7 +10,7 @@ import androidx.annotation.Nullable
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
-import com.blogspot.soyamr.notforgotagain.view.AddNoteFragment
+import com.blogspot.soyamr.notforgotagain.view.addnote.AddNoteFragment
 import java.text.SimpleDateFormat
 import java.util.*
 

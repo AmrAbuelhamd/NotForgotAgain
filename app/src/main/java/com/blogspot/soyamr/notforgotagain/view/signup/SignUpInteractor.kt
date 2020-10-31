@@ -11,11 +11,18 @@ class SignUpInteractor(
 
     interface OnSignUpFinishedListener {
         fun onSuccess()
+        fun onError()
     }
 
-    fun insertUser(name: String, email: String, password: String) {
-        repository.insetUser(name, email, password)
-        listener.onSuccess()
+    fun insertUser(name: String, email: String, password: String, repeatPassword: String) {
+        if (email.isEmpty() || password.isEmpty() || name.isEmpty() || repeatPassword.isEmpty()
+            || password != repeatPassword
+        ) {
+            listener.onError()
+        } else {
+            repository.insetUser(name, email, password)
+            listener.onSuccess()
+        }
     }
 
 }

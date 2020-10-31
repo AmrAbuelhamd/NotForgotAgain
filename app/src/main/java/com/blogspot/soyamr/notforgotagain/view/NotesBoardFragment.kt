@@ -1,18 +1,18 @@
 package com.blogspot.soyamr.notforgotagain.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blogspot.soyamr.notforgotagain.R
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
-import com.blogspot.soyamr.notforgotagain.view.recycler_view_components.FavAdapter
+import com.blogspot.soyamr.notforgotagain.view.recycler_view_components.NoteAdapter
 import com.blogspot.soyamr.notforgotagain.view.recycler_view_components.Recipe
 import kotlinx.android.synthetic.main.fragment_notes_board.*
 
@@ -23,6 +23,7 @@ class NotesBoardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val args = arguments?.let { NotesBoardFragmentArgs.fromBundle(it) }
         currentUserId = args?.uId
+        Log.i("please: ", " )))) " + currentUserId)
         setUpToolBar(view)
         setClickListener()
         setupRecyclerView();
@@ -37,7 +38,9 @@ class NotesBoardFragment : Fragment() {
         }
         val repository = NoteRepository(requireContext())
         toolBar.setOnMenuItemClickListener {
-            findNavController().navigate(NotesBoardFragmentDirections.actionNotesBoardFragmentToSignInFragment())
+            findNavController().navigate(
+                NotesBoardFragmentDirections.actionNotesBoardFragmentToSignInFragment()
+            )
             repository.signMeOut(currentUserId!!)
             true
         }
@@ -45,11 +48,12 @@ class NotesBoardFragment : Fragment() {
     }
 
     private fun setClickListener() {
-        addNoteFloatingActionButton.setOnClickListener(
-            Navigation.createNavigateOnClickListener(
-                NotesBoardFragmentDirections.actionNotesBoardFragmentToAddNoteFragment()
+        addNoteFloatingActionButton.setOnClickListener {
+            findNavController().navigate(
+                NotesBoardFragmentDirections.actionNotesBoardFragmentToAddNoteFragment(currentUserId!!)
             )
-        )
+
+        }
     }
 
     private fun setupRecyclerView() {
@@ -75,7 +79,7 @@ class NotesBoardFragment : Fragment() {
             Recipe("Тыквенный суп со вкусом карри", R.drawable.fav1, "4 порции", "25 мин")
         )
 
-        val myAdapter = FavAdapter(recipe) { position ->
+        val myAdapter = NoteAdapter(recipe) { position ->
 //            val intent = Intent(context, LoggedInFavoriteItemFragment::class.java).apply {
 //                putExtra("recipe", recipe[position])
 //            }
