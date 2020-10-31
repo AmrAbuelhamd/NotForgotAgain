@@ -16,8 +16,10 @@ import kotlinx.android.synthetic.main.fragment_note_details.*
 
 class NoteDetailsFragment : Fragment() {
 
-
+    var currentNote: Long? = 0L
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        val args = arguments?.let { NotesBoardFragmentArgs.fromBundle(it) }
+//        currentNote = args?.uId
         setClicks()
         setUpToolBar(view)
     }

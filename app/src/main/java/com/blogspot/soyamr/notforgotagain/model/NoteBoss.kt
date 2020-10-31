@@ -1,4 +1,4 @@
 package com.blogspot.soyamr.notforgotagain.model
 
-class NoteBoss {
+open class NoteBoss {
 }

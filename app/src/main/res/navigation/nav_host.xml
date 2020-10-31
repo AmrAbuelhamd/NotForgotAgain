@@ -79,6 +79,9 @@
         <action
             android:id="@+id/action_noteDetailsFragment_to_addNoteFragment"
             app:destination="@id/addNoteFragment" />
+        <argument
+            android:name="nid"
+            app:argType="long" />
     </fragment>
     <dialog
         android:id="@+id/datePickerFragment"

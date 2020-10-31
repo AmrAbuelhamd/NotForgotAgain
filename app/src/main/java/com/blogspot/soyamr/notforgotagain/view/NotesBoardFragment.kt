@@ -87,7 +87,11 @@ class NotesBoardFragment : Fragment() {
 //            Navigation.createNavigateOnClickListener(
 //                NotesBoardFragmentDirections.actionNotesBoardFragmentToNoteDetailsFragment()
 //            )
-            findNavController().navigate(R.id.action_notesBoardFragment_to_noteDetailsFragment)
+            findNavController().navigate(
+                NotesBoardFragmentDirections.actionNotesBoardFragmentToNoteDetailsFragment(
+                    0L
+                )
+            )
         }
 
         val myViewManager = LinearLayoutManager(context)
