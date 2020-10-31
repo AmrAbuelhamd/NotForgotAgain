@@ -11,6 +11,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.blogspot.soyamr.notforgotagain.R
+import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import kotlinx.android.synthetic.main.fragment_note_details.*
 
 
@@ -18,10 +19,22 @@ class NoteDetailsFragment : Fragment() {
 
     var currentNote: Long? = 0L
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        val args = arguments?.let { NotesBoardFragmentArgs.fromBundle(it) }
-//        currentNote = args?.uId
+        val args = arguments?.let { NoteDetailsFragmentArgs.fromBundle(it) }
+        currentNote = args?.nid
+        showInfo()
         setClicks()
         setUpToolBar(view)
+    }
+
+    private fun showInfo() {
+        val repository = NoteRepository(requireContext())
+        val note = repository.getnote(currentNote)
+        val category = repository.getCategory(note.cid)
+        mytitleTextView.text = note.title
+        categoryTextView.text = category.name
+        descTextView.text = note.description
+        dateTextView.text = note.date
+        isDoneTextView.text = if(note.isDone) "done" else "no"
     }
 
     private fun setUpToolBar(view: View) {

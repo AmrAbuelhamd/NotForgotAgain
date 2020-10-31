@@ -75,5 +75,13 @@ object NoteRepository {
         return noteDao.getAll(currentUserId!!)
     }
 
+    fun getnote(currentNote: Long?): Note {
+        return noteDao.getNote(currentNote!!)
+    }
+
+    fun getCategory(cid: Long): Category {
+        return categoryDao.getCategory(cid)
+    }
+
 
 }
