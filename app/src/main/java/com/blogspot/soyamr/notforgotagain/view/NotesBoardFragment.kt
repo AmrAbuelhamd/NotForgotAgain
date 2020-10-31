@@ -131,6 +131,7 @@ class NotesBoardFragment : Fragment() {
         val cats = repository.getCategories()
         val nots = repository.getnotes(currentUserId)
 
+        notes.clear()
         cats.forEach { ob ->
             notes.add(NoteBoss(null, ob))
             nots.forEach {
