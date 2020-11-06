@@ -7,7 +7,7 @@
     tools:context=".view.addnote.AddNoteFragment">
 
     <include
-        android:id="@+id/afsaa"
+        android:id="@+id/includedActionBar"
         layout="@layout/toolbar_application" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -20,7 +20,7 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/afsaa">
+        app:layout_constraintTop_toBottomOf="@+id/includedActionBar">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
