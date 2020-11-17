@@ -1,7 +1,7 @@
 package com.blogspot.soyamr.notforgotagain.view.addnote
 
 import android.content.Context
-import android.util.Log
+import com.blogspot.soyamr.notforgotagain.domain.GeneralData
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import com.blogspot.soyamr.notforgotagain.model.tables.Note
 
@@ -12,8 +12,8 @@ class AddNoteInteractor(
     interface OnLoginFinishedListener {
         fun onSignInError()
         fun onSuccess(userId: Long)
-        fun populateCategorySpinner(data: ArrayList<String>)
-        fun populatePrioritySpinner(priorities: ArrayList<String>)
+        fun populateCategorySpinner(data: List<GeneralData>)
+        fun populatePrioritySpinner(priorities: List<GeneralData>)
         fun addNewNote(note: Note)
         fun error()
     }
@@ -23,33 +23,27 @@ class AddNoteInteractor(
 
     fun fetchCategories() {
         val categories = repository.getCategories()
-        val data = ArrayList<String>()
-        for (el in categories)
-            data.add(el.name.toString())
-        listener.populateCategorySpinner(data)
+        val categoriesDomain = categories.map { it.toDomain() }
+        listener.populateCategorySpinner(categoriesDomain)
     }
 
     fun fetchPriorities() {
         val priorities = repository.getPriorities()
-        val data = ArrayList<String>()
-        for (el in priorities) {
-            data.add(el.name.toString())
-            Log.i("spinneri", el.name.toString())
-        }
-        listener.populatePrioritySpinner(data)
+        val prioritiesDomain = priorities.map { it.toDomain() }
+        listener.populatePrioritySpinner(prioritiesDomain)
     }
 
-    fun addNewCategory(currentUserId: Long?, newCategory: String?) {
-        repository.addNewCategory(currentUserId, newCategory)
-        val category = ArrayList<String>()
-        category.add(newCategory.toString())
-        listener.populateCategorySpinner(category)
+    fun addNewCategory(newCategory: String) {
+
+        val category = repository.addNewCategory(newCategory)
+        val categoryDomain = category.toDomain()
+        listener.populateCategorySpinner(listOf(categoryDomain))
     }
 
     fun addNewNote(
         currentUserId: Long?,
-        categorySpinner: String,
-        prioritySpinner: String,
+        categorySpinner: Long,
+        prioritySpinner: Long,
         dateText: String,
         headerTextLayout: String,
         descriptionTextLayout: String
@@ -67,6 +61,7 @@ class AddNoteInteractor(
                 descriptionTextLayout
             )
             listener.addNewNote(note)
+            listener.onSuccess(-1)
         }
     }
 

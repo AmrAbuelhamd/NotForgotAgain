@@ -7,62 +7,41 @@ import com.blogspot.soyamr.notforgotagain.model.tables.*
 
 object NoteRepository {
 
-    private lateinit var userDao: UserDao
     private lateinit var noteDao: NoteDao
     private lateinit var categoryDao: CategoryDao
     private lateinit var priorityDao: PriorityDao
 
     operator fun invoke(context: Context): NoteRepository {
         val db = NotesDataBase.getDatabase(context)
-        userDao = db.userDao()
         noteDao = db.noteDao()
         categoryDao = db.categoryDao()
         priorityDao = db.priorityDao()
         return this
     }
 
-    fun getSignedInUser() = userDao.getSignedInUser()
-
-    fun doWeHaveSuchUser(email: String, password: String) =
-        userDao.doWeHaveSuchUser(email, password)
-
-    fun signMeIn(uId: Long) {
-        userDao.signInUser(uId)
-    }
-
-    fun signMeOut(currentUserId: Long) {
-        userDao.signOutUser(currentUserId)
-    }
-
-    fun insetUser(name: String, email: String, password: String) {
-        val user = User(name, email, password)
-        userDao.insertUser(user)
-    }
-
-
     fun getPriorities() = priorityDao.getAll()
     fun getCategories() = categoryDao.getAll()
-    fun addNewCategory(currentUserId: Long?, newCategory: String?) {
-        val category = Category(newCategory, categoryDao.getBiggestId() + 1)
-        categoryDao.insertCategory(category)
-    }
 
+//    fun addNewCategory( newCategory: String?) {
+//        val category = Category(newCategory, categoryDao.getBiggestId() + 1)
+//        categoryDao.insertCategory(category)
+//    }
+//
     fun addNewNote(
         currentUserId: Long?,
-        categorySpinnerText: String,
-        prioritySpinnerText: String,
+        categorySpinnerTextId: Long,
+        prioritySpinnerTextId: Long,
         dateText: String,
         headerTextLayout: String,
         descriptionTextLayout: String
     ): Note {
-        val categoryId = categoryDao.getCategoryId(categorySpinnerText)
-        val priorityId = priorityDao.getPriorityId(prioritySpinnerText)
-
-        Log.i("please2: ", " )))) " + currentUserId)
+        Log.i("hie: ", " )))) " + categorySpinnerTextId)
+        Log.i("hie: ", " )))) " + prioritySpinnerTextId)
 
         val note = Note(
-            headerTextLayout, descriptionTextLayout, dateText, false,
-            currentUserId!!, categoryId, priorityId
+            (++catNo).toLong(),
+            headerTextLayout, descriptionTextLayout, false,5245, 45564,
+            categorySpinnerTextId, prioritySpinnerTextId
         )
 
         noteDao.insertNote(note)
@@ -71,8 +50,8 @@ object NoteRepository {
 
     }
 
-    fun getnotes(currentUserId: Long?): List<Note> {
-        return noteDao.getAll(currentUserId!!)
+    fun getnotes(): List<Note> {
+        return noteDao.getAll()
     }
 
     fun getnote(currentNote: Long?): Note {
@@ -81,6 +60,19 @@ object NoteRepository {
 
     fun getCategory(cid: Long): Category {
         return categoryDao.getCategory(cid)
+    }
+
+    fun getFullNoteDataRelatedToCategory(categoryId: Long) =
+        noteDao.getFullNoteDataRelatedToCategory(categoryId)
+
+    fun getFullNoteData(currentNoteId: Long) =
+        noteDao.getFullNoteData(currentNoteId)
+
+    var catNo: Int = 1;
+    fun addNewCategory(newCategory: String):Category {
+        val category = Category((++catNo).toLong(), newCategory)
+        categoryDao.insertCategory(category)
+        return category;
     }
 
 

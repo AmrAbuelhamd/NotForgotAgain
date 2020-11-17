@@ -28,13 +28,12 @@ class NoteDetailsFragment : Fragment() {
 
     private fun showInfo() {
         val repository = NoteRepository(requireContext())
-        val note = repository.getnote(currentNote)
-        val category = repository.getCategory(note.cid)
-        mytitleTextView.text = note.title
-        categoryTextView.text = category.name
-        descTextView.text = note.description
-        dateTextView.text = note.date.toString()
-        isDoneTextView.text = if(note.isDone) "Выполнено" else "no"
+        val note = repository.getFullNoteData(currentNote!!)
+        mytitleTextView.text = note.nTitle
+        categoryTextView.text = note.cName
+        descTextView.text = note.nDescription
+        dateTextView.text = note.nCreated.toString()
+        isDoneTextView.text = if(note.nDone) "Выполнено" else "no"
     }
 
     private fun setUpToolBar(view: View) {

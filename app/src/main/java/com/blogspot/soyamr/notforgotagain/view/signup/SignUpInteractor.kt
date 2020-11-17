@@ -20,7 +20,7 @@ class SignUpInteractor(
         ) {
             listener.onError()
         } else {
-            repository.insetUser(name, email, password)
+//            repository.insetUser(name, email, password)
             listener.onSuccess()
         }
     }

@@ -1,5 +1,6 @@
 package com.blogspot.soyamr.notforgotagain.view.addnote
 
+import com.blogspot.soyamr.notforgotagain.domain.GeneralData
 import com.blogspot.soyamr.notforgotagain.model.tables.Note
 
 class AddNotePresenter(val addNoteView: AddNoteView) : AddNoteInteractor.OnLoginFinishedListener {
@@ -22,17 +23,17 @@ class AddNotePresenter(val addNoteView: AddNoteView) : AddNoteInteractor.OnLogin
 //        signInView.hidProgressBar()
     }
 
-    override fun populateCategorySpinner(categories: ArrayList<String>) {
+    override fun populateCategorySpinner(categories: List<GeneralData>) {
         addNoteView.populateCategorySpinnerData(categories)
     }
 
-    override fun populatePrioritySpinner(priorities: ArrayList<String>) {
+    override fun populatePrioritySpinner(priorities: List<GeneralData>) {
         addNoteView.populatePrioritySpinnerData(priorities)
     }
 
     override fun addNewNote(note: Note) {
         addNoteView.addNewNote(note)
-        addNoteView.moveToNoteBoard(note.uid)
+//        addNoteView.moveToNoteBoard(note.uid)
     }
 
     override fun error() {
@@ -41,18 +42,19 @@ class AddNotePresenter(val addNoteView: AddNoteView) : AddNoteInteractor.OnLogin
 
 
     fun getSpinnersData() {
+
         addNoteInteractor.fetchCategories()
         addNoteInteractor.fetchPriorities()
     }
 
-    fun addNewCategory(currentUserId: Long?, newCategory: String?) {
-        addNoteInteractor.addNewCategory(currentUserId, newCategory)
+    fun addNewCategory(newCategory: String) {
+        addNoteInteractor.addNewCategory( newCategory)
     }
 
     fun saveNote(
         currentUserId: Long?,
-        categorySpinner: String,
-        prioritySpinner: String,
+        categorySpinner: Long,
+        prioritySpinner: Long,
         dateText: String,
         headerTextLayout: String,
         descriptionTextLayout: String

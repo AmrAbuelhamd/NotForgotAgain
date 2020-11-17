@@ -1,6 +1,7 @@
 package com.blogspot.soyamr.notforgotagain.view.addnote
 
 import android.content.Context
+import com.blogspot.soyamr.notforgotagain.domain.GeneralData
 import com.blogspot.soyamr.notforgotagain.model.tables.Note
 
 interface AddNoteView {
@@ -9,8 +10,8 @@ interface AddNoteView {
     fun setSignInError()
     fun showProgressBar()
     fun hidProgressBar()
-    fun populateCategorySpinnerData(categories: ArrayList<String>)
-    fun populatePrioritySpinnerData(priorities: ArrayList<String>)
+    fun populateCategorySpinnerData(categories: List<GeneralData>)
+    fun populatePrioritySpinnerData(priorities: List<GeneralData>)
     fun addNewNote(note: Note)
     fun showError()
 

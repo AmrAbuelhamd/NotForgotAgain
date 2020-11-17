@@ -23,6 +23,8 @@
     <string name="cancel">Отмена</string>
     <string name="input_text">Input text</string>
     <string name="sign_out">Sign Out</string>
+    <string name="priority">Приоритет</string>
+    <string name="categoryTasks">Категория задачи</string>
 
     <string-array name="planets_array">
         <item>Категория задачи</item>

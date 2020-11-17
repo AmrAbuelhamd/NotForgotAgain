@@ -23,10 +23,11 @@ class NotesBoardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val args = arguments?.let { NotesBoardFragmentArgs.fromBundle(it) }
         currentUserId = args?.uId
-        Log.i("please: ", " )))) " + currentUserId)
         setUpToolBar(view)
         setClickListener()
         setupRecyclerView2();
+        Log.i("spinneri"," hiiiii")
+
     }
 
     private fun setUpToolBar(view: View) {
@@ -41,7 +42,7 @@ class NotesBoardFragment : Fragment() {
             findNavController().navigate(
                 NotesBoardFragmentDirections.actionNotesBoardFragmentToSignInFragment()
             )
-            repository.signMeOut(currentUserId!!)
+//            repository.signMeOut(currentUserId!!)
             true
         }
 
@@ -81,17 +82,16 @@ class NotesBoardFragment : Fragment() {
         super.onResume()
         val repository = NoteRepository(requireContext())
 
-        val cats = repository.getCategories()
-        val nots = repository.getnotes(currentUserId)
-
         notes.clear()
-        cats.forEach { ob ->
-            notes.add(NoteBoss(null, ob))
-            nots.forEach {
-                if (ob.cid == it.cid)
-                    notes.add(NoteBoss(it, null))
+        val cats = repository.getCategories()
+        cats.forEach {
+            val notesOfCategory = repository.getFullNoteDataRelatedToCategory(it.id);
+            notes.add(NoteBoss(null, it))
+            notesOfCategory.forEach {
+                notes.add(NoteBoss(it, null))
             }
         }
+
         myAdapter.notifyDataSetChanged()
 
     }

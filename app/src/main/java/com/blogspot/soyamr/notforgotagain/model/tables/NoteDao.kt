@@ -8,25 +8,40 @@ import androidx.room.Query
 
 @Dao
 interface NoteDao {
-    @Query("SELECT * FROM note where uid = :uid order by cid")
-    fun getAll(uid: Long): List<Note>
+    @Query("SELECT * FROM note")
+    fun getAll(): List<Note>
 
-    @Query("UPDATE note set isDone = 1 where nid = :nid")
-    fun setDone(nid: Long)
+    @Query("UPDATE note set done = 1 where id = :id")
+    fun setDone(id: Long)
 
-    @Query("UPDATE note set isDone = 0 where nid = :nid")
-    fun setUnDone(nid: Long)
+    @Query("UPDATE note set done = 0 where id = :id")
+    fun setUnDone(id: Long)
 
-    @Query("delete from note where nid = :nid")
-    fun deleteNote(nid: Long)
+    @Query("delete from note where id = :id")
+    fun deleteNote(id: Long)
 
-    @Query("select * from note where nid = :nid")
-    fun getNote(nid: Long): Note
+    @Query("select * from note where id = :id")
+    fun getNote(id: Long): Note
 
     @Insert()
-    fun insertNote(note: Note)
+    fun insertNote(vararg note: Note)
 
     @Delete
     fun delete(note: Note)
+
+    @Query(
+        "SELECT category.id as cId, category.name as cName , priority.id as pId," +
+                " priority.name as pName, priority.color as pColor, note.id as nId," +
+                " note.title as nTitle, note.description as nDescription, note.done as nDone " +
+                ",note.deadline as nDeadline , note.created as nCreated from category, note," +
+                " priority where note.parentCategoryId=category.id and note.parentPriorityId=priority.id " +
+                "and note.parentCategoryId=:categoryId order by category.name"
+    )
+    fun getFullNoteDataRelatedToCategory(categoryId:Long): List<FullNoteData>
+
+    @Query(
+        "SELECT category.id as cId, category.name as cName , priority.id as pId, priority.name as pName, priority.color as pColor, note.id as nId, note.title as nTitle, note.description as nDescription, note.done as nDone ,note.deadline as nDeadline , note.created as nCreated from category, note, priority where note.parentCategoryId=category.id and note.parentPriorityId=priority.id and note.id=:currentNoteId"
+    )
+    fun getFullNoteData(currentNoteId: Long): FullNoteData
 
 }

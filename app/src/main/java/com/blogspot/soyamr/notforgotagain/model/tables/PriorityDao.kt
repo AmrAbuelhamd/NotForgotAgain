@@ -6,15 +6,13 @@ import androidx.room.Query
 
 @Dao
 interface PriorityDao {
-    @Query("SELECT * FROM priority")
+    @Query("SELECT * FROM priority order by id")
     fun getAll(): List<Priority>
 
-    @Query("SELECT * FROM priority WHERE pid = :pid")
-    fun getPriority(pid: Long): Priority
+    @Query("SELECT * FROM priority WHERE id = :id")
+    fun getPriority(id: Long): Priority
 
-    @Insert()
+    @Insert
     fun insertPriority(vararg priority: Priority)
 
-    @Query("select pid from priority where name like :prioritySpinnerText")
-    fun getPriorityId(prioritySpinnerText: String): Long
 }

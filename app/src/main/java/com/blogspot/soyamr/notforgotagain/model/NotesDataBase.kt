@@ -1,35 +1,41 @@
 package com.blogspot.soyamr.notforgotagain.model
 
 import android.content.Context
-import android.graphics.Color
 import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.blogspot.soyamr.notforgotagain.R
 import com.blogspot.soyamr.notforgotagain.model.tables.*
 import java.util.concurrent.Executors
 
 
 @Database(
-    entities = [User::class, Priority::class, Category::class, Note::class],
-    version = 4,
-    exportSchema = false
+    entities = [Priority::class, Category::class, Note::class],
+    version = 6
 )
-public abstract class NotesDataBase : RoomDatabase() {
+abstract class NotesDataBase : RoomDatabase() {
 
-    abstract fun userDao(): UserDao
     abstract fun priorityDao(): PriorityDao
     abstract fun categoryDao(): CategoryDao
     abstract fun noteDao(): NoteDao
 
+
     companion object {
         // Singleton prevents multiple instances of database opening at the
         // same time.
+        var firstTime = true;
+
         @Volatile
         private var INSTANCE: NotesDataBase? = null
-
+        private lateinit var context: Context
         fun getDatabase(context: Context): NotesDataBase {
+//            if (firstTime) {
+//                context.deleteDatabase("notes_database")
+//                firstTime = false;
+//            }
+            this.context = context
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
             return INSTANCE ?: synchronized(this) {
@@ -44,16 +50,22 @@ public abstract class NotesDataBase : RoomDatabase() {
             }
         }
 
-        var dbCallbacks: Callback = object : Callback() {
+        private var dbCallbacks: Callback = object : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
                 Executors.newSingleThreadExecutor().execute {
-                    val priority1 = Priority("1", Color.YELLOW, 1)
-                    val priority2 = Priority("2", Color.BLUE, 2)
-                    val priority3 = Priority("3", Color.RED, 3)
-                    val priority4 = Priority("4", Color.GREEN, 4)
+                    val priority1 =
+                        Priority(-1, context.resources.getString(R.string.priority), -1)
+                    val priority2 =
+                        Priority(0, "1", 45451)
                     INSTANCE?.priorityDao()
-                        ?.insertPriority(priority1, priority2, priority3, priority4)
+                        ?.insertPriority(priority1, priority2)
+                    Log.i("spinneri", "data")
+
+                    val category =
+                        Category(-1, context.resources.getString(R.string.categoryTasks))
+                    INSTANCE?.categoryDao()
+                        ?.insertCategory(category)
                 }
             }
 
