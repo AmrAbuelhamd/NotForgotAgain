@@ -16,7 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.blogspot.soyamr.notforgotagain.R
 import com.blogspot.soyamr.notforgotagain.domain.GeneralData
-import com.blogspot.soyamr.notforgotagain.model.tables.Note
+import com.blogspot.soyamr.notforgotagain.model.db.tables.Note
 import kotlinx.android.synthetic.main.fragment_add_note.*
 
 

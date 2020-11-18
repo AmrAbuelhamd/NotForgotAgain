@@ -1,4 +1,4 @@
-package com.blogspot.soyamr.notforgotagain.model
+package com.blogspot.soyamr.notforgotagain.model.db
 
 import android.content.Context
 import android.util.Log
@@ -7,7 +7,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.blogspot.soyamr.notforgotagain.R
-import com.blogspot.soyamr.notforgotagain.model.tables.*
+import com.blogspot.soyamr.notforgotagain.model.db.tables.*
 import java.util.concurrent.Executors
 
 
@@ -35,7 +35,7 @@ abstract class NotesDataBase : RoomDatabase() {
 //                context.deleteDatabase("notes_database")
 //                firstTime = false;
 //            }
-            this.context = context
+            Companion.context = context
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
             return INSTANCE ?: synchronized(this) {

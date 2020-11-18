@@ -1,7 +1,7 @@
 package com.blogspot.soyamr.notforgotagain.view.addnote
 
 import com.blogspot.soyamr.notforgotagain.domain.GeneralData
-import com.blogspot.soyamr.notforgotagain.model.tables.Note
+import com.blogspot.soyamr.notforgotagain.model.db.tables.Note
 
 class AddNotePresenter(val addNoteView: AddNoteView) : AddNoteInteractor.OnLoginFinishedListener {
     private val addNoteInteractor = AddNoteInteractor(addNoteView.getRequiredContext(), this)

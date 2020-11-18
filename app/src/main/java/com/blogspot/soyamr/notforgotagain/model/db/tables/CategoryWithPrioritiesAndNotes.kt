@@ -1,4 +1,4 @@
-package com.blogspot.soyamr.notforgotagain.model.tables
+package com.blogspot.soyamr.notforgotagain.model.db.tables
 
 import androidx.room.Embedded
 import androidx.room.Relation

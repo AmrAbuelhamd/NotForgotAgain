@@ -2,7 +2,7 @@ package com.blogspot.soyamr.notforgotagain.view.addnote
 
 import android.content.Context
 import com.blogspot.soyamr.notforgotagain.domain.GeneralData
-import com.blogspot.soyamr.notforgotagain.model.tables.Note
+import com.blogspot.soyamr.notforgotagain.model.db.tables.Note
 
 interface AddNoteView {
     fun getRequiredContext(): Context

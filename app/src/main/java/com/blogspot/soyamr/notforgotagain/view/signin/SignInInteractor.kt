@@ -2,6 +2,7 @@ package com.blogspot.soyamr.notforgotagain.view.signin
 
 import android.content.Context
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
+import com.blogspot.soyamr.notforgotagain.model.net.pojo.LoginUser
 
 class SignInInteractor(
     private val context: Context,
@@ -18,13 +19,9 @@ class SignInInteractor(
         if (email.isEmpty() || password.isEmpty())
             listener.onSignInError()
         else {
-//            val id = repository.doWeHaveSuchUser(email, password)
-//            if (id != 0L) {
-//                listener.onSuccess(id)
-//                repository.signMeIn(id)
-//            } else {
-//                listener.onSignInError()
-//            }
+            repository.logIn(LoginUser(email, password))
+
+            listener.onSuccess(0)
         }
     }
 

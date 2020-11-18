@@ -21,7 +21,7 @@ class SignInFragment : Fragment(), SignInView {
     private lateinit var presenter: SignInPresenter
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter = SignInPresenter(this)
-        presenter.checkSignedIn()
+        //presenter.checkSignedIn()
 
         setActionBar(view)
         setOnClickListeners()

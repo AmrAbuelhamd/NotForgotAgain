@@ -1,6 +1,4 @@
-package com.blogspot.soyamr.notforgotagain.model.tables
-
-import androidx.room.Embedded
+package com.blogspot.soyamr.notforgotagain.model.db.tables
 
 data class FullNoteData(
     var cId: Long,

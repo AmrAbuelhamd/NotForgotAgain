@@ -11,14 +11,15 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blogspot.soyamr.notforgotagain.R
-import com.blogspot.soyamr.notforgotagain.model.NoteBoss
+import com.blogspot.soyamr.notforgotagain.domain.NoteBoss
+import com.blogspot.soyamr.notforgotagain.domain.NoteBoss2
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import com.blogspot.soyamr.notforgotagain.view.recycler_view_components.NoteAdapter
 import kotlinx.android.synthetic.main.fragment_notes_board.*
 
 
 class NotesBoardFragment : Fragment() {
-    var notes = ArrayList<NoteBoss>()
+    var notes = ArrayList<NoteBoss2>()
     var currentUserId: Long? = 0L
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val args = arguments?.let { NotesBoardFragmentArgs.fromBundle(it) }
@@ -26,7 +27,25 @@ class NotesBoardFragment : Fragment() {
         setUpToolBar(view)
         setClickListener()
         setupRecyclerView2();
-        Log.i("spinneri"," hiiiii")
+
+
+        val repository = NoteRepository(requireContext())
+        notes.clear()
+        val cats = repository.getCategoriesNet()
+        Log.e("board ", " " + cats.toString())
+
+        val nots = repository.getNotesNet()
+
+        cats?.forEach{ca->
+            Log.e("notboard: "," category-: "+ca.toString())
+            notes.add(NoteBoss2(null, ca))
+            nots?.forEach {
+                Log.e("notboard2: "," task-: "+it.toString())
+                if(it.category?.id==ca.id)
+                    notes.add(NoteBoss2(it, null))
+            }
+        }
+        myAdapter.notifyDataSetChanged()
 
     }
 
@@ -80,20 +99,33 @@ class NotesBoardFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val repository = NoteRepository(requireContext())
+//        val repository = NoteRepository(requireContext())
+//
+//        notes.clear()
+//        val cats = repository.getCategories()
+//        cats.forEach {
+//            val notesOfCategory = repository.getFullNoteDataRelatedToCategory(it.id);
+//            notes.add(NoteBoss(null, it))
+//            notesOfCategory.forEach {
+//                notes.add(NoteBoss(it, null))
+//            }
+//        }
 
-        notes.clear()
-        val cats = repository.getCategories()
-        cats.forEach {
-            val notesOfCategory = repository.getFullNoteDataRelatedToCategory(it.id);
-            notes.add(NoteBoss(null, it))
-            notesOfCategory.forEach {
-                notes.add(NoteBoss(it, null))
-            }
-        }
-
-        myAdapter.notifyDataSetChanged()
-
+//        val repository = NoteRepository(requireContext())
+//        notes.clear()
+//        val cats = repository.getCategoriesNet()
+//        val nots = repository.getNotesNet()
+//        cats?.forEach{ca->
+//            notes.add(NoteBoss2(null, ca))
+//            nots?.forEach {
+//                if(it.category?.id==ca.id)
+//                    notes.add(NoteBoss2(it, null))
+//            }
+//        }
+//
+//
+//
+//        myAdapter.notifyDataSetChanged()
     }
 
     override fun onCreateView(

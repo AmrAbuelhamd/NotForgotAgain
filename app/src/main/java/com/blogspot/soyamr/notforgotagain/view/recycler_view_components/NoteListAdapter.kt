@@ -1,16 +1,18 @@
 package com.blogspot.soyamr.notforgotagain.view.recycler_view_components
 
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.blogspot.soyamr.notforgotagain.R
-import com.blogspot.soyamr.notforgotagain.model.NoteBoss
-import com.blogspot.soyamr.notforgotagain.model.tables.Category
-import com.blogspot.soyamr.notforgotagain.model.tables.FullNoteData
-import com.blogspot.soyamr.notforgotagain.model.tables.Note
+import com.blogspot.soyamr.notforgotagain.domain.NoteBoss
+import com.blogspot.soyamr.notforgotagain.domain.NoteBoss2
+import com.blogspot.soyamr.notforgotagain.model.net.pojo.Category
+import com.blogspot.soyamr.notforgotagain.model.net.pojo.Task
+import com.blogspot.soyamr.notforgotagain.model.db.tables.FullNoteData
 import kotlinx.android.synthetic.main.item_note_details.view.*
 import kotlinx.android.synthetic.main.item_note_header.view.*
 
@@ -18,7 +20,7 @@ import kotlinx.android.synthetic.main.item_note_header.view.*
 private const val DETAILS_TYPE = 1
 private const val HEADER_TYPE = 2
 
-class NoteAdapter(val notes: ArrayList<NoteBoss>, private val listener: (Long) -> Unit) :
+class NoteAdapter(val notes: ArrayList<NoteBoss2>, private val listener: (Long) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class ViewHolderHeader(val viewItem: View) :
@@ -33,14 +35,21 @@ class NoteAdapter(val notes: ArrayList<NoteBoss>, private val listener: (Long) -
 
     class ViewHolderDetails(val viewItem: View, private val listener: (Long) -> Unit) :
         RecyclerView.ViewHolder(viewItem) {
-        fun setNoteDetails(fullNoteData: FullNoteData) {
-            titleTextView.text = fullNoteData.nTitle
-            subtitleTextView.text = fullNoteData.nDescription
+        fun setNoteDetails(fullNoteData: Task) {
+//            titleTextView.text = fullNoteData.nTitle
+//            subtitleTextView.text = fullNoteData.nDescription
+//
+//            val cardView = viewItem.cardView as CardView
+//            cardView.setCardBackgroundColor(fullNoteData.pColor)
+//
+//            viewItem.setOnClickListener { listener(fullNoteData.nId) }
+            titleTextView.text = fullNoteData.title
+            subtitleTextView.text = fullNoteData.description
 
             val cardView = viewItem.cardView as CardView
-            cardView.setCardBackgroundColor(fullNoteData.pColor)
+            cardView.setCardBackgroundColor(Color.parseColor(fullNoteData.priority?.color))
 
-            viewItem.setOnClickListener { listener(fullNoteData.nId) }
+            viewItem.setOnClickListener { listener(fullNoteData.id) }
         }
 
         val titleTextView = viewItem.titleTextView
