@@ -1,7 +1,9 @@
 package com.blogspot.soyamr.notforgotagain.model
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
+import com.blogspot.soyamr.notforgotagain.R
 import com.blogspot.soyamr.notforgotagain.model.db.NotesDataBase
 import com.blogspot.soyamr.notforgotagain.model.db.tables.*
 import com.blogspot.soyamr.notforgotagain.model.net.Network
@@ -20,7 +22,7 @@ object NoteRepository {
     private lateinit var categoryDao: CategoryDao
     private lateinit var priorityDao: PriorityDao
     private lateinit var apiService: TaskApiService
-
+    private lateinit var sharedPref: SharedPreferences
 
     operator fun invoke(context: Context): NoteRepository {
         val db = NotesDataBase.getDatabase(context)
@@ -29,6 +31,12 @@ object NoteRepository {
         noteDao = db.noteDao()
         categoryDao = db.categoryDao()
         priorityDao = db.priorityDao()
+
+        sharedPref = context.getSharedPreferences(
+            context.resources.getString(R.string.preference_file_key),
+            Context.MODE_PRIVATE
+        )
+
         return this
     }
 
@@ -95,7 +103,7 @@ object NoteRepository {
                     apiService.login(loginUser)
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Log.e("error login ",e.toString())
+                    Log.e("error login ", e.toString())
 
                     null
                 }
@@ -114,7 +122,7 @@ object NoteRepository {
                     apiService.getCategories()
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Log.e("error cat ",e.toString())
+                    Log.e("error cat ", e.toString())
                     null
                 }
             } ?: return@launch
@@ -133,7 +141,7 @@ object NoteRepository {
                     apiService.getTasks()
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Log.e("error tasks ",e.toString())
+                    Log.e("error tasks ", e.toString())
                     null
                 }
             } ?: return@launch

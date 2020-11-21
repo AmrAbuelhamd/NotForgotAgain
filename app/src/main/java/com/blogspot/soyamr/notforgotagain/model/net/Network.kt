@@ -10,6 +10,22 @@ import retrofit2.Retrofit
 
 object Network {
     private var token: String = ""
+    private val okHttpClient: OkHttpClient by lazy {
+        OkHttpClient.Builder().addInterceptor { chain ->
+            var request = chain.request()
+            if (request.header("No-Authentication") == null) {
+//                if (token.isNotEmpty()) {
+                val finalToken = "Bearer $token"
+                Log.e(" ttooken ", " " + finalToken)
+                request = request.newBuilder()
+                    .addHeader("Authorization", finalToken)
+                    .build()
+                Log.e(" request header ", " " + request.headers)
+//                }
+            }
+            chain.proceed(request)
+        }.build()
+    }
 
     fun updateToken(token: UserToken) {
         this.token = token.apiToken
@@ -19,22 +35,8 @@ object Network {
 
     val retrofit: TaskApiService by lazy {
         Retrofit.Builder()
+            .client(okHttpClient)
             .baseUrl("http://practice.mobile.kreosoft.ru/api/")
-            .client(OkHttpClient.Builder().addInterceptor { chain ->
-                var request = chain.request()
-                if (request.header("No-Authentication") == null) {
-                    if (!token.isNullOrEmpty()) {
-                        val finalToken = "Bearer $token"
-                        Log.e(" ttooken ", " " + finalToken)
-                        request = request.newBuilder()
-                            .addHeader("Authorization", finalToken)
-                            .build()
-                        Log.e(" request header ", " " + request.headers)
-                    }
-
-                }
-                chain.proceed(request)
-            }.build())
             .addConverterFactory(
                 Json {
                     ignoreUnknownKeys = true

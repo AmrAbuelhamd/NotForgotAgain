@@ -15,7 +15,6 @@ interface TaskApiService {
     @Headers("No-Authentication: true")
     suspend fun login(@Body loginUser: LoginUser): UserToken
 
-
     @GET("tasks")
     suspend fun getTasks(): List<Task>
 

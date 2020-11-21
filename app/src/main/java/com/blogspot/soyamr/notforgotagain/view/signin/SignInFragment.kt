@@ -7,21 +7,29 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.blogspot.soyamr.notforgotagain.R
-import com.blogspot.soyamr.notforgotagain.view.dialogfragments.LoadingDialogFragment
+import com.blogspot.soyamr.notforgotagain.databinding.FragmentSignInBinding
+import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 
 
 class SignInFragment : Fragment(), SignInView {
 
     private lateinit var presenter: SignInPresenter
+    private val repository: NoteRepository by lazy { NoteRepository(requireContext()) }
+    private val viewModel: SignInViewModel by viewModels { SignInViewModelFactory(repository) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter = SignInPresenter(this)
         //presenter.checkSignedIn()
+
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
         setActionBar(view)
         setOnClickListeners()
@@ -52,12 +60,15 @@ class SignInFragment : Fragment(), SignInView {
         )
     }
 
+    lateinit var binding: FragmentSignInBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_in, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_sign_in, container, false)
+
+        return binding.root
     }
 
     override fun getRequiredContext(): Context {

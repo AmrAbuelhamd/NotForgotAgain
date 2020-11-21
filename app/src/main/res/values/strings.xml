@@ -26,6 +26,9 @@
     <string name="priority">Приоритет</string>
     <string name="categoryTasks">Категория задачи</string>
 
+    <string name="preference_file_key">sharedPrefSmartName</string>
+
+
     <string-array name="planets_array">
         <item>Категория задачи</item>
         <item>Venus</item>
