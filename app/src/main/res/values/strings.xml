@@ -27,6 +27,8 @@
     <string name="categoryTasks">Категория задачи</string>
 
     <string name="preference_file_key">sharedPrefSmartName</string>
+    <string name="tokenKey">tokenSmartName</string>
+    <string name="defaultToken">no token</string>
 
 
     <string-array name="planets_array">

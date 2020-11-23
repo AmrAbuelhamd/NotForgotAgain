@@ -4,7 +4,7 @@ class SignInPresenter(val signInView: SignInView) : SignInInteractor.OnLoginFini
     private val signInInteractor = SignInInteractor(signInView.getRequiredContext(),this)
 
     fun signIn(email: String, password: String) {
-        signInInteractor.signIn(email, password)
+//        signInInteractor.signIn(email, password)
     }
 
     override fun onSignInError() {

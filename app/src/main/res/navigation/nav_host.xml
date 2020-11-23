@@ -35,7 +35,7 @@
     </fragment>
     <fragment
         android:id="@+id/notesBoardFragment"
-        android:name="com.blogspot.soyamr.notforgotagain.view.NotesBoardFragment"
+        android:name="com.blogspot.soyamr.notforgotagain.view.noteboard.NotesBoardFragment"
         android:label="fragment_notes_board"
         tools:layout="@layout/fragment_notes_board">
         <action

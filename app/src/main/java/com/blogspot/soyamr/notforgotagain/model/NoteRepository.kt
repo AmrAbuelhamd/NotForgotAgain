@@ -23,8 +23,10 @@ object NoteRepository {
     private lateinit var priorityDao: PriorityDao
     private lateinit var apiService: TaskApiService
     private lateinit var sharedPref: SharedPreferences
+    private lateinit var context: Context
 
     operator fun invoke(context: Context): NoteRepository {
+        this.context = context
         val db = NotesDataBase.getDatabase(context)
         apiService = Network.retrofit
 
@@ -96,26 +98,34 @@ object NoteRepository {
         return category;
     }
 
-    fun logIn(loginUser: LoginUser) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val userToken = withContext(Dispatchers.IO) {
-                try {
-                    apiService.login(loginUser)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.e("error login ", e.toString())
+    suspend fun logIn(loginUser: LoginUser): Boolean {
 
-                    null
-                }
-            } ?: return@launch
+        val userToken =
+            apiService.login(loginUser)
+
+        if (userToken.apiToken.isNotEmpty()) {
             Network.updateToken(userToken)
-            Log.e("Token ", " " + userToken)
+            with(sharedPref.edit()) {
+                putString(context.resources.getString(R.string.tokenKey), userToken.apiToken)
+                apply()
+            }
+        } else {
+            return false
         }
+        return true
     }
 
+    fun doWeHaveToken(): Boolean {
+        val defaultToken = context.resources.getString(R.string.defaultToken)
+        return sharedPref.getString(
+            context.resources.getString(R.string.tokenKey),
+            defaultToken
+        ) != defaultToken
+    }
 
     fun getCategoriesNet(): List<com.blogspot.soyamr.notforgotagain.model.net.pojo.Category>? {
-        var categories1: List<com.blogspot.soyamr.notforgotagain.model.net.pojo.Category>? = null
+        var categories1: List<com.blogspot.soyamr.notforgotagain.model.net.pojo.Category>? =
+            null
         GlobalScope.launch(Dispatchers.Main) {
             val categories = withContext(Dispatchers.IO) {
                 try {
@@ -150,4 +160,15 @@ object NoteRepository {
         }
         return nots1;
     }
+
+    fun logOutUser() {
+        context.deleteDatabase("notes_database")
+        val defaultToken = context.resources.getString(R.string.defaultToken)
+        with(sharedPref.edit()) {
+            putString(context.resources.getString(R.string.tokenKey), defaultToken)
+            apply()
+        }
+    }
+
+
 }

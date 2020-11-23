@@ -15,7 +15,7 @@ class SignInInteractor(
 
     private val repository = NoteRepository(context)
 
-    fun signIn(email: String, password: String) {
+    suspend fun signIn(email: String, password: String) {
         if (email.isEmpty() || password.isEmpty())
             listener.onSignInError()
         else {

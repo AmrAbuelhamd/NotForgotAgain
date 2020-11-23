@@ -1,4 +1,4 @@
-package com.blogspot.soyamr.notforgotagain.view
+package com.blogspot.soyamr.notforgotagain.view.noteboard
 
 import android.os.Bundle
 import android.util.Log
@@ -7,11 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blogspot.soyamr.notforgotagain.R
-import com.blogspot.soyamr.notforgotagain.domain.NoteBoss
+import com.blogspot.soyamr.notforgotagain.databinding.FragmentNotesBoardBinding
 import com.blogspot.soyamr.notforgotagain.domain.NoteBoss2
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import com.blogspot.soyamr.notforgotagain.view.recycler_view_components.NoteAdapter
@@ -25,6 +27,9 @@ class NotesBoardFragment : Fragment() {
         val args = arguments?.let { NotesBoardFragmentArgs.fromBundle(it) }
         currentUserId = args?.uId
         setUpToolBar(view)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
         setClickListener()
         setupRecyclerView2();
 
@@ -36,18 +41,21 @@ class NotesBoardFragment : Fragment() {
 
         val nots = repository.getNotesNet()
 
-        cats?.forEach{ca->
-            Log.e("notboard: "," category-: "+ca.toString())
+        cats?.forEach { ca ->
+            Log.e("notboard: ", " category-: " + ca.toString())
             notes.add(NoteBoss2(null, ca))
             nots?.forEach {
-                Log.e("notboard2: "," task-: "+it.toString())
-                if(it.category?.id==ca.id)
+                Log.e("notboard2: ", " task-: " + it.toString())
+                if (it.category?.id == ca.id)
                     notes.add(NoteBoss2(it, null))
             }
         }
         myAdapter.notifyDataSetChanged()
 
     }
+
+    private val repository: NoteRepository by lazy { NoteRepository(requireContext()) }
+    private val viewModel: NoteBoardViewModel by viewModels { NoteBoardViewModelFactory(repository) }
 
     private fun setUpToolBar(view: View) {
         val toolBar = view.findViewById<Toolbar>(R.id.my_toolbar)
@@ -58,6 +66,7 @@ class NotesBoardFragment : Fragment() {
         }
         val repository = NoteRepository(requireContext())
         toolBar.setOnMenuItemClickListener {
+            viewModel.logOutUser()
             findNavController().navigate(
                 NotesBoardFragmentDirections.actionNotesBoardFragmentToSignInFragment()
             )
@@ -128,14 +137,17 @@ class NotesBoardFragment : Fragment() {
 //        myAdapter.notifyDataSetChanged()
     }
 
+    lateinit var binding: FragmentNotesBoardBinding
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
 
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_notes_board, container, false)
+        return binding.root
 
-        return inflater.inflate(R.layout.fragment_notes_board, container, false);
     }
 
 }

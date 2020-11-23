@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -21,18 +22,32 @@ import kotlinx.android.synthetic.main.fragment_sign_in.*
 
 class SignInFragment : Fragment(), SignInView {
 
-    private lateinit var presenter: SignInPresenter
+    // private lateinit var presenter: SignInPresenter
     private val repository: NoteRepository by lazy { NoteRepository(requireContext()) }
     private val viewModel: SignInViewModel by viewModels { SignInViewModelFactory(repository) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        presenter = SignInPresenter(this)
+        // presenter = SignInPresenter(this)
         //presenter.checkSignedIn()
 
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
+        setUpViewModelCalls()
+
 
         setActionBar(view)
         setOnClickListeners()
+    }
+
+    private fun setUpViewModelCalls() {
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        viewModel.doWeHaveAlreadySignedInUser.observe(this, Observer {
+            if (it) {
+                findNavController().navigate(
+                    SignInFragmentDirections.actionSignInFragmentToNotesBoardFragment(
+                        0
+                    )
+                )
+            }
+        })
     }
 
     private fun setActionBar(view: View) {
@@ -47,11 +62,11 @@ class SignInFragment : Fragment(), SignInView {
     }
 
     private fun setOnClickListeners() {
-        signInButtonView.setOnClickListener {
-            val email = emailTextInputLayout.editText?.text.toString().trim()
-            val password = passwordTextInputLayout.editText?.text.toString().trim()
-            presenter.signIn(email, password)
-        }
+//        signInButtonView.setOnClickListener {
+//            val email = emailTextInputLayout.editText?.text.toString().trim()
+//            val password = passwordTextInputLayout.editText?.text.toString().trim()
+//            presenter.signIn(email, password)
+//        }
 
         createAccountTextView.setOnClickListener(
             Navigation.createNavigateOnClickListener(
