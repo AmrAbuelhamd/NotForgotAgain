@@ -2,8 +2,11 @@ package com.blogspot.soyamr.notforgotagain.model
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.Log
 import com.blogspot.soyamr.notforgotagain.R
+import com.blogspot.soyamr.notforgotagain.domain.NoteBoss
 import com.blogspot.soyamr.notforgotagain.model.db.NotesDataBase
 import com.blogspot.soyamr.notforgotagain.model.db.tables.*
 import com.blogspot.soyamr.notforgotagain.model.net.Network
@@ -15,9 +18,14 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+sealed class Result<out R> {
+    data class Success<out T>(val data: T) : Result<T>()
+    data class Error(val exception: Exception) : Result<Nothing>()
+}
 
 object NoteRepository {
 
+    private val tag = "NoteRepository"
     private lateinit var noteDao: NoteDao
     private lateinit var categoryDao: CategoryDao
     private lateinit var priorityDao: PriorityDao
@@ -43,7 +51,7 @@ object NoteRepository {
     }
 
     fun getPriorities() = priorityDao.getAll()
-    fun getCategories() = categoryDao.getAll()
+    suspend fun getCategories() = categoryDao.getAll()
 
     //    fun addNewCategory( newCategory: String?) {
 //        val category = Category(newCategory, categoryDao.getBiggestId() + 1)
@@ -67,15 +75,110 @@ object NoteRepository {
             categorySpinnerTextId, prioritySpinnerTextId
         )
 
-        noteDao.insertNote(note)
+        noteDao.insertNote(listOf(note))
 
         return note
 
     }
 
-    fun getnotes(): List<Note> {
-        return noteDao.getAll()
+    //first: get data from database, and make a ready to use list of noteBoss for recyclerview
+    suspend fun getNotes(): Result<ArrayList<NoteBoss>> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val cats = categoryDao.getAll()
+                println("AAmr cats repo ${cats}")
+                val notes = ArrayList<NoteBoss>()
+                cats.forEach {
+                    val notesOfCategory = noteDao.getFullNoteDataRelatedToCategory(it.id)
+                    println("AAmr notesOfCategory: repo ${notesOfCategory}")
+                    notes.add(NoteBoss(null, it))
+                    notesOfCategory.forEach {
+                        notes.add(NoteBoss(it, null))
+                    }
+                }
+                Result.Success(notes)
+            } catch (e: Exception) {
+                println("AAmr getNotes() $tag ->> $e")
+                Result.Error(Exception("AAmr Can't fetch data from local cash"))
+            }
+        }
     }
+
+    private fun isOnline(): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//        if (connectivityManager != null) {
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            when {
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                    return true
+                }
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                    return true
+                }
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
+                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                    return true
+                }
+            }
+        }
+//        }
+        return false
+    }
+
+    //1- check if there is internet or no -> IF no THEN return no internet mistake, IF yes THEN:
+    //2- get un submitted notes and send them to api IF error THEN  return and show error "can't update remove server"
+    // IF yes THEN get notes from server and store them to database, and return success
+    suspend fun updateDataBase(): Result<String> {
+        return withContext(Dispatchers.IO) {
+            if (isOnline()) {
+                //get un Submitted notes and send them to api
+//                try {
+//                    val unSubmittedNotes = noteDao.getUnSubmittedNotes()
+//                    val unSubmittedCats = categoryDao.getUnSubmittedCategories()
+//                    if (unSubmittedCats.isNotEmpty() || unSubmittedNotes.isNotEmpty()) {
+//                    }
+//                    //todo create list of notes for server
+//                    //todo send them to api
+//
+//                } catch (e: Exception) {
+//                    println("$tag ->> $e")
+//                    Result.Error(Exception("can't update remove serve"))
+//                }
+
+                //get data from api and send them to database [let's say there will be no problem from database]
+                try {
+                    val updatedTasks = apiService.getTasks()
+                    println("AAmr updatedTasks: $updatedTasks")
+                    val cats = updatedTasks.map { it.toDataBaseCategory() }
+                    val priority = updatedTasks.map { it.toDataBasePriority() }
+                    val notes = updatedTasks.map { it.toDataBaseNote() }
+                    cleanDataBase()
+                    categoryDao.insertCategory(cats)
+                    priorityDao.insertPriority(priority)
+                    noteDao.insertNote(notes)
+                    Result.Success("everything is good")
+                } catch (e: Exception) {
+                    println("AAmr $tag ->> $e")
+                    Result.Error(Exception("can't fetch data from server"))
+                }
+            } else {
+                Result.Error(Exception("no internet"))
+            }
+        }
+    }
+
+    private fun cleanDataBase() {
+        noteDao.deleteAll()
+        categoryDao.deleteAll()
+        priorityDao.deleteAll()
+    }
+
+    fun getUnSubmittedNotes() = noteDao.getUnSubmittedNotes()
 
     fun getnote(currentNote: Long?): Note {
         return noteDao.getNote(currentNote!!)
@@ -85,7 +188,7 @@ object NoteRepository {
         return categoryDao.getCategory(cid)
     }
 
-    fun getFullNoteDataRelatedToCategory(categoryId: Long) =
+    suspend fun getFullNoteDataRelatedToCategory(categoryId: Long) =
         noteDao.getFullNoteDataRelatedToCategory(categoryId)
 
     fun getFullNoteData(currentNoteId: Long) =
@@ -94,7 +197,7 @@ object NoteRepository {
     var catNo: Int = 1;
     fun addNewCategory(newCategory: String): Category {
         val category = Category((++catNo).toLong(), newCategory)
-        categoryDao.insertCategory(category)
+        categoryDao.insertCategory(listOf(category))
         return category;
     }
 
@@ -104,7 +207,7 @@ object NoteRepository {
             apiService.login(loginUser)
 
         if (userToken.apiToken.isNotEmpty()) {
-            Network.updateToken(userToken)
+            Network.updateToken(userToken.apiToken)
             with(sharedPref.edit()) {
                 putString(context.resources.getString(R.string.tokenKey), userToken.apiToken)
                 apply()
@@ -117,10 +220,15 @@ object NoteRepository {
 
     fun doWeHaveToken(): Boolean {
         val defaultToken = context.resources.getString(R.string.defaultToken)
-        return sharedPref.getString(
+        val storedToken = sharedPref.getString(
             context.resources.getString(R.string.tokenKey),
             defaultToken
-        ) != defaultToken
+        )
+        val result = storedToken != defaultToken
+        if (storedToken != null && result)
+            Network.updateToken(storedToken)
+
+        return result
     }
 
     fun getCategoriesNet(): List<com.blogspot.soyamr.notforgotagain.model.net.pojo.Category>? {
@@ -161,14 +269,18 @@ object NoteRepository {
         return nots1;
     }
 
-    fun logOutUser() {
-        context.deleteDatabase("notes_database")
-        val defaultToken = context.resources.getString(R.string.defaultToken)
-        with(sharedPref.edit()) {
-            putString(context.resources.getString(R.string.tokenKey), defaultToken)
-            apply()
+    suspend fun logOutUser() {
+        withContext(Dispatchers.IO) {
+            context.deleteDatabase("notes_database")
+            val defaultToken = context.resources.getString(R.string.defaultToken)
+            with(sharedPref.edit()) {
+                putString(context.resources.getString(R.string.tokenKey), defaultToken)
+                apply()
+            }
         }
     }
 
+    fun getLiveNotes() =
+        noteDao.getAll()
 
 }

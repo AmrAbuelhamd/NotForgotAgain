@@ -7,7 +7,8 @@ import com.blogspot.soyamr.notforgotagain.domain.Category
 @Entity
 data class Category(
     @PrimaryKey var id: Long,
-    val name: String
+    val name: String,
+    val isSavedToApi: Boolean? = true
 ) {
     fun toDomain() = Category(name, id)
 }

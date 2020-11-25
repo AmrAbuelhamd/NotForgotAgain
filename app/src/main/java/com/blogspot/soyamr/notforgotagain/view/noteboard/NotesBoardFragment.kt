@@ -1,7 +1,6 @@
 package com.blogspot.soyamr.notforgotagain.view.noteboard
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,22 +9,20 @@ import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blogspot.soyamr.notforgotagain.R
 import com.blogspot.soyamr.notforgotagain.databinding.FragmentNotesBoardBinding
-import com.blogspot.soyamr.notforgotagain.domain.NoteBoss2
+import com.blogspot.soyamr.notforgotagain.domain.NoteBoss
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import com.blogspot.soyamr.notforgotagain.view.recycler_view_components.NoteAdapter
 import kotlinx.android.synthetic.main.fragment_notes_board.*
 
 
 class NotesBoardFragment : Fragment() {
-    var notes = ArrayList<NoteBoss2>()
-    var currentUserId: Long? = 0L
+    var notes = ArrayList<NoteBoss>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val args = arguments?.let { NotesBoardFragmentArgs.fromBundle(it) }
-        currentUserId = args?.uId
         setUpToolBar(view)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -33,24 +30,27 @@ class NotesBoardFragment : Fragment() {
         setClickListener()
         setupRecyclerView2();
 
+        viewModel.notes.observe(viewLifecycleOwner, Observer { myNotes ->
+            myAdapter.updateData(myNotes)
+        })
 
-        val repository = NoteRepository(requireContext())
-        notes.clear()
-        val cats = repository.getCategoriesNet()
-        Log.e("board ", " " + cats.toString())
-
-        val nots = repository.getNotesNet()
-
-        cats?.forEach { ca ->
-            Log.e("notboard: ", " category-: " + ca.toString())
-            notes.add(NoteBoss2(null, ca))
-            nots?.forEach {
-                Log.e("notboard2: ", " task-: " + it.toString())
-                if (it.category?.id == ca.id)
-                    notes.add(NoteBoss2(it, null))
-            }
-        }
-        myAdapter.notifyDataSetChanged()
+//        val repository = NoteRepository(requireContext())
+//        notes.clear()
+//        val cats = repository.getCategoriesNet()
+//        Log.e("board ", " " + cats.toString())
+//
+//        val nots = repository.getNotesNet()
+//
+//        cats?.forEach { ca ->
+//            Log.e("notboard: ", " category-: " + ca.toString())
+//            notes.add(NoteBoss2(null, ca))
+//            nots?.forEach {
+//                Log.e("notboard2: ", " task-: " + it.toString())
+//                if (it.category?.id == ca.id)
+//                    notes.add(NoteBoss2(it, null))
+//            }
+//        }
+//        myAdapter.notifyDataSetChanged()
 
     }
 
@@ -79,9 +79,8 @@ class NotesBoardFragment : Fragment() {
     private fun setClickListener() {
         addNoteFloatingActionButton.setOnClickListener {
             findNavController().navigate(
-                NotesBoardFragmentDirections.actionNotesBoardFragmentToAddNoteFragment(currentUserId!!)
+                NotesBoardFragmentDirections.actionNotesBoardFragmentToAddNoteFragment()
             )
-
         }
     }
 

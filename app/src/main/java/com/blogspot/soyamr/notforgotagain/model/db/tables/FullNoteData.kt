@@ -5,7 +5,7 @@ data class FullNoteData(
     val cName: String,
     val pId: Long,
     val pName: String,
-    val pColor: Int,
+    val pColor: String,
     val nId:Long,
     val nTitle: String,
     val nDescription: String?,

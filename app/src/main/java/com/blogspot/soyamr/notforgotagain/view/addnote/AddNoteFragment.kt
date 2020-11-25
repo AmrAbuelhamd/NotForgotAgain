@@ -33,8 +33,8 @@ class AddNoteFragment : Fragment(), AddNoteView {
     var currentUserId: Long? = 0L
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter = AddNotePresenter(this)
-        val args = arguments?.let { AddNoteFragmentArgs.fromBundle(it) }
-        currentUserId = args?.uid
+//        val args = arguments?.let { AddNoteFragmentArgs.fromBundle(it) }
+//        currentUserId = args?.uid
 
         Log.i("spinneri","hiiii2")
 
@@ -127,7 +127,7 @@ class AddNoteFragment : Fragment(), AddNoteView {
     override fun moveToNoteBoard(userId: Long) {
         findNavController().navigate(
             AddNoteFragmentDirections.actionAddNoteFragmentToNotesBoardFragment(
-                userId
+//                userId
             )
         )
     }

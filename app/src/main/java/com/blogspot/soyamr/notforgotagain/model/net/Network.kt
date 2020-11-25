@@ -1,7 +1,5 @@
 package com.blogspot.soyamr.notforgotagain.model.net
 
-import android.util.Log
-import com.blogspot.soyamr.notforgotagain.model.net.pojo.UserToken
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -10,26 +8,27 @@ import retrofit2.Retrofit
 
 object Network {
     private var token: String = ""
+
     private val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder().addInterceptor { chain ->
             var request = chain.request()
             if (request.header("No-Authentication") == null) {
-//                if (token.isNotEmpty()) {
-                val finalToken = "Bearer $token"
-                Log.e(" ttooken ", " " + finalToken)
-                request = request.newBuilder()
-                    .addHeader("Authorization", finalToken)
-                    .build()
-                Log.e(" request header ", " " + request.headers)
-//                }
+                if (token.isNotEmpty()) {
+                    val finalToken = "Bearer $token"
+                    println(" AAmr finalToken: $finalToken")
+                    request = request.newBuilder()
+                        .addHeader("Authorization", finalToken)
+                        .build()
+                    println("AAmr request header  ${request.headers}")
+                }
             }
             chain.proceed(request)
         }.build()
     }
 
-    fun updateToken(token: UserToken) {
-        this.token = token.apiToken
-        Log.i("betweok", "updated token " + token.apiToken)
+    fun updateToken(token: String) {
+        this.token = token
+        println("AAmr netweok updated token ${token}")
     }
 
 

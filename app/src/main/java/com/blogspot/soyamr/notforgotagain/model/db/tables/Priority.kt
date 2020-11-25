@@ -8,7 +8,7 @@ import com.blogspot.soyamr.notforgotagain.domain.Priority
 data class Priority(
     @PrimaryKey val id: Long,
     val name: String,
-    val color: Int
+    val color: String
 ) {
     fun toDomain() = Priority(name, id)
 }

@@ -22,15 +22,15 @@ class AddNoteInteractor(
 
 
     fun fetchCategories() {
-        val categories = repository.getCategories()
-        val categoriesDomain = categories.map { it.toDomain() }
-        listener.populateCategorySpinner(categoriesDomain)
+//        val categories = repository.getCategories().value
+//        val categoriesDomain = categories?.map { it.toDomain() }
+//        listener.populateCategorySpinner(categoriesDomain!!)
     }
 
     fun fetchPriorities() {
-        val priorities = repository.getPriorities()
-        val prioritiesDomain = priorities.map { it.toDomain() }
-        listener.populatePrioritySpinner(prioritiesDomain)
+//        val priorities = repository.getPriorities()
+//        val prioritiesDomain = priorities.map { it.toDomain() }
+//        listener.populatePrioritySpinner(prioritiesDomain)
     }
 
     fun addNewCategory(newCategory: String) {

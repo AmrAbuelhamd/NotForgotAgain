@@ -1,6 +1,8 @@
 package com.blogspot.soyamr.notforgotagain.model.db.tables
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
 
 @Dao
 interface CategoryDao {
@@ -11,6 +13,11 @@ interface CategoryDao {
     fun getCategory(id: Long): Category
 
     @Insert
-    fun insertCategory(vararg category: Category)
+    fun insertCategory(category: List<Category>)
 
+    @Query("Select * from category where isSavedToApi = 0")
+    fun getUnSubmittedCategories(): List<Category>
+
+    @Query("DELETE FROM category where id != -1 ")
+    fun deleteAll()
 }

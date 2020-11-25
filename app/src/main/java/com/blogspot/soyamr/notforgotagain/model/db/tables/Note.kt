@@ -27,5 +27,6 @@ data class Note(
     val deadline: Long?,
     val created: Long?,
     val parentCategoryId: Long,
-    val parentPriorityId: Long
+    val parentPriorityId: Long,
+    val isSavedToApi:Boolean? = true
 )

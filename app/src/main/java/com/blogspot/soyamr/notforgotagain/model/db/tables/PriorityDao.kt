@@ -13,6 +13,9 @@ interface PriorityDao {
     fun getPriority(id: Long): Priority
 
     @Insert
-    fun insertPriority(vararg priority: Priority)
+    fun insertPriority(priority: List<Priority>)
+
+    @Query("DELETE FROM priority where id != -1 ")
+    fun deleteAll()
 
 }

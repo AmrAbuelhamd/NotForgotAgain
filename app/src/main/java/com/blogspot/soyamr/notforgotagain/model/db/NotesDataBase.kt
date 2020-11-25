@@ -13,7 +13,7 @@ import java.util.concurrent.Executors
 
 @Database(
     entities = [Priority::class, Category::class, Note::class],
-    version = 6
+    version = 8
 )
 abstract class NotesDataBase : RoomDatabase() {
 
@@ -31,10 +31,6 @@ abstract class NotesDataBase : RoomDatabase() {
         private var INSTANCE: NotesDataBase? = null
         private lateinit var context: Context
         fun getDatabase(context: Context): NotesDataBase {
-//            if (firstTime) {
-//                context.deleteDatabase("notes_database")
-//                firstTime = false;
-//            }
             Companion.context = context
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
@@ -55,17 +51,17 @@ abstract class NotesDataBase : RoomDatabase() {
                 super.onCreate(db)
                 Executors.newSingleThreadExecutor().execute {
                     val priority1 =
-                        Priority(-1, context.resources.getString(R.string.priority), -1)
+                        Priority(-1, context.resources.getString(R.string.priority), "-1")
                     val priority2 =
-                        Priority(0, "1", 45451)
+                        Priority(0, "1", "#E7004D")
                     INSTANCE?.priorityDao()
-                        ?.insertPriority(priority1, priority2)
+                        ?.insertPriority(listOf(priority1, priority2))
                     Log.i("spinneri", "data")
 
                     val category =
                         Category(-1, context.resources.getString(R.string.categoryTasks))
                     INSTANCE?.categoryDao()
-                        ?.insertCategory(category)
+                        ?.insertCategory(listOf(category))
                 }
             }
 

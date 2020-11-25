@@ -48,7 +48,7 @@ class NoteDetailsFragment : Fragment() {
     private fun setClicks() {
         editNoteImageView.setOnClickListener(
             Navigation.createNavigateOnClickListener(
-                NoteDetailsFragmentDirections.actionNoteDetailsFragmentToAddNoteFragment(currentNote!!)//todo send id
+                NoteDetailsFragmentDirections.actionNoteDetailsFragmentToAddNoteFragment()//todo send id
             )
         )
     }

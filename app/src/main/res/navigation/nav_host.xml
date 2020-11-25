@@ -44,9 +44,6 @@
         <action
             android:id="@+id/action_notesBoardFragment_to_addNoteFragment"
             app:destination="@id/addNoteFragment" />
-        <argument
-            android:name="uId"
-            app:argType="long" />
         <action
             android:id="@+id/action_notesBoardFragment_to_signInFragment"
             app:destination="@id/signInFragment"
@@ -67,9 +64,6 @@
         <action
             android:id="@+id/action_addNoteFragment_to_addCategoryDialogFragment"
             app:destination="@id/addCategoryDialogFragment" />
-        <argument
-            android:name="uid"
-            app:argType="long" />
         <argument
             android:name="nid"
             app:argType="long"

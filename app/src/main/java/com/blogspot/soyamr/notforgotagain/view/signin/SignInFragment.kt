@@ -42,9 +42,7 @@ class SignInFragment : Fragment(), SignInView {
         viewModel.doWeHaveAlreadySignedInUser.observe(this, Observer {
             if (it) {
                 findNavController().navigate(
-                    SignInFragmentDirections.actionSignInFragmentToNotesBoardFragment(
-                        0
-                    )
+                    SignInFragmentDirections.actionSignInFragmentToNotesBoardFragment()
                 )
             }
         })
@@ -62,12 +60,6 @@ class SignInFragment : Fragment(), SignInView {
     }
 
     private fun setOnClickListeners() {
-//        signInButtonView.setOnClickListener {
-//            val email = emailTextInputLayout.editText?.text.toString().trim()
-//            val password = passwordTextInputLayout.editText?.text.toString().trim()
-//            presenter.signIn(email, password)
-//        }
-
         createAccountTextView.setOnClickListener(
             Navigation.createNavigateOnClickListener(
                 SignInFragmentDirections.actionSignInFragmentToSignUpFragment()
@@ -92,7 +84,7 @@ class SignInFragment : Fragment(), SignInView {
 
     override fun moveToNoteBoard(userId: Long) {
         findNavController().navigate(
-            SignInFragmentDirections.actionSignInFragmentToNotesBoardFragment(userId)
+            SignInFragmentDirections.actionSignInFragmentToNotesBoardFragment()
         )
     }
 

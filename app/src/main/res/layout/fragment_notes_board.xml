@@ -46,6 +46,9 @@
             android:src="@drawable/ic_plus"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
-
+        <include
+            android:id="@+id/here_must_be_id_or_no_databinding"
+            android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}"
+            layout="@layout/loading_state" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
