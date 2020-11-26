@@ -25,6 +25,7 @@
             android:text="TextView"
             android:textColor="@android:color/white"
             android:textStyle="bold"
+            android:textFontWeight="600"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/doneCheckBox"
             app:layout_constraintHorizontal_bias="0.0"

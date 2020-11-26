@@ -1,4 +1,4 @@
-package com.blogspot.soyamr.notforgotagain.view
+package com.blogspot.soyamr.notforgotagain.view.note_details
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,22 +6,35 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.blogspot.soyamr.notforgotagain.R
+import com.blogspot.soyamr.notforgotagain.databinding.FragmentNoteDetailsBinding
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import kotlinx.android.synthetic.main.fragment_note_details.*
 
 
 class NoteDetailsFragment : Fragment() {
 
+
+    private val repository: NoteRepository by lazy { NoteRepository(requireContext()) }
+    private val viewModel: NoteDetailsViewModel by viewModels { NoteDetailsViewModelFactory(repository,currentNote!!) }
+
+
+
     var currentNote: Long? = 0L
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val args = arguments?.let { NoteDetailsFragmentArgs.fromBundle(it) }
         currentNote = args?.nid
-        showInfo()
+//        showInfo()
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
+
         setClicks()
         setUpToolBar(view)
     }
@@ -33,7 +46,7 @@ class NoteDetailsFragment : Fragment() {
         categoryTextView.text = note.cName
         descTextView.text = note.nDescription
         dateTextView.text = note.nCreated.toString()
-        isDoneTextView.text = if(note.nDone) "Выполнено" else "no"
+        isDoneTextView.text = if(note.nDone) "Выполнено" else "Не Выполнено"
     }
 
     private fun setUpToolBar(view: View) {
@@ -48,17 +61,20 @@ class NoteDetailsFragment : Fragment() {
     private fun setClicks() {
         editNoteImageView.setOnClickListener(
             Navigation.createNavigateOnClickListener(
-                NoteDetailsFragmentDirections.actionNoteDetailsFragmentToAddNoteFragment()//todo send id
+                NoteDetailsFragmentDirections.actionNoteDetailsFragmentToAddNoteFragment(currentNote!!)
             )
         )
     }
+    lateinit var binding: FragmentNoteDetailsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_note_details, container, false)
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_note_details, container, false)
+        return binding.root
+
     }
 
 

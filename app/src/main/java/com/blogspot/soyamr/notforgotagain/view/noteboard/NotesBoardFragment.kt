@@ -59,7 +59,7 @@ class NotesBoardFragment : Fragment() {
     private fun setClickListener() {
         addNoteFloatingActionButton.setOnClickListener {
             findNavController().navigate(
-                NotesBoardFragmentDirections.actionNotesBoardFragmentToAddNoteFragment()
+                NotesBoardFragmentDirections.actionNotesBoardFragmentToAddNoteFragment(-1L)
             )
         }
     }

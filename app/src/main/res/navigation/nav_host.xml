@@ -65,13 +65,12 @@
             android:id="@+id/action_addNoteFragment_to_addCategoryDialogFragment"
             app:destination="@id/addCategoryDialogFragment" />
         <argument
-            android:name="nid"
-            app:argType="long"
-            android:defaultValue="-1L" />
+            android:name="noteId"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/noteDetailsFragment"
-        android:name="com.blogspot.soyamr.notforgotagain.view.NoteDetailsFragment"
+        android:name="com.blogspot.soyamr.notforgotagain.view.note_details.NoteDetailsFragment"
         android:label="fragment_note_details"
         tools:layout="@layout/fragment_note_details">
         <action

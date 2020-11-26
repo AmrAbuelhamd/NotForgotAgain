@@ -50,8 +50,11 @@ object NoteRepository {
         return this
     }
 
-    fun getPriorities() = priorityDao.getAll()
-    suspend fun getCategories() = categoryDao.getAll()
+    suspend fun getPriorities() =
+        withContext(Dispatchers.IO) { priorityDao.getAll() }
+
+    suspend fun getCategories() =
+        withContext(Dispatchers.IO) { categoryDao.getAll() }
 
     //    fun addNewCategory( newCategory: String?) {
 //        val category = Category(newCategory, categoryDao.getBiggestId() + 1)
@@ -284,7 +287,7 @@ object NoteRepository {
     suspend fun markNoteAsDone(noteId: Long, checked: Boolean): Result<String> =
         withContext(Dispatchers.IO) {
             val note = noteDao.getNote(noteId)
-            if(note.done){
+            if (note.done) {
                 return@withContext Result.Success("everything is good offline")
             }
             if (note.isSavedToApi == false) {

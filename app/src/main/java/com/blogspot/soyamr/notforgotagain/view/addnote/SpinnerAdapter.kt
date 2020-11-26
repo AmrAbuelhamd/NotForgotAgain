@@ -23,7 +23,7 @@ class SpinnerAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        return dataValues[position].getID()
+        return dataValues[position]?.getID()
     }
 
 
