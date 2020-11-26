@@ -43,8 +43,6 @@ class NoteBoardViewModel(private val repository: NoteRepository) : ViewModel() {
             when (val result = repository.getNotes()) {
                 is Result.Success<ArrayList<NoteBoss>> -> {
                     _notes.value = result.data
-                    println("AAmr _notes.value: ${_notes.value}")
-                    println("AAmr result.data.value: ${result.data}")
                 }
                 else -> {
                     println("AAmr problem getting notes")
@@ -67,6 +65,23 @@ class NoteBoardViewModel(private val repository: NoteRepository) : ViewModel() {
                     //show error}
                 }
             }
+            _isLoading.value = false
+        }
+    }
+
+    fun onCheckBoxClicked(noteId: Long, checked: Boolean) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            when (val result = repository.markNoteAsDone(noteId, checked)) {
+                is Result.Success<String> -> {
+                    println("$tag fetched data")
+                }
+                else -> {
+                    println("$tag error on set check")
+                    //show error}
+                }
+            }
+            getNotes()
             _isLoading.value = false
         }
     }

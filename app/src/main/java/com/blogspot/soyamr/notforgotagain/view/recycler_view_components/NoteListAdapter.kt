@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
 import com.blogspot.soyamr.notforgotagain.R
 import com.blogspot.soyamr.notforgotagain.domain.NoteBoss
@@ -17,34 +18,43 @@ import kotlinx.android.synthetic.main.item_note_header.view.*
 private const val DETAILS_TYPE = 1
 private const val HEADER_TYPE = 2
 
-class NoteAdapter(val notes: ArrayList<NoteBoss>, private val listener: (Long) -> Unit) :
+class NoteAdapter(
+    val notes: ArrayList<NoteBoss>,
+    private val listener: (Int) -> Unit,
+    private val listenerCheckBox: (Int, Boolean) -> Unit
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    class ViewHolderHeader(val viewItem: View) :
+    class ViewHolderHeader(private val viewItem: View) :
         RecyclerView.ViewHolder(viewItem) {
-        val headerTextView = viewItem.headerTextView
 
         fun setHeader(category: Category) {
-            headerTextView.text = category.name
-            //viewItem.setBackgroundColor(viewItem.resources.getColor(R.color.design_default_color_secondary_variant))
+            viewItem.headerTextView.text = category.name
         }
     }
 
-    class ViewHolderDetails(val viewItem: View, private val listener: (Long) -> Unit) :
-        RecyclerView.ViewHolder(viewItem) {
+    class ViewHolderDetails(
+        private val viewItem: View, private val listener: (Int) -> Unit,
+        private val listenerCheckBox: (Int, Boolean) -> Unit
+    ) : RecyclerView.ViewHolder(viewItem) {
         fun setNoteDetails(fullNoteData: FullNoteData) {
 
-            titleTextView.text = fullNoteData.nTitle
-            subtitleTextView.text = fullNoteData.nDescription
+            viewItem.titleTextView.text = fullNoteData.nTitle
+            viewItem.subTitleTextView.text = fullNoteData.nDescription
 
             viewItem.cardView.setCardBackgroundColor(Color.parseColor(fullNoteData.pColor))
-
-            viewItem.setOnClickListener { listener(fullNoteData.nId) }
+            viewItem.doneCheckBox.isChecked = fullNoteData.nDone
 
         }
-
-        val titleTextView = viewItem.titleTextView
-        val subtitleTextView = viewItem.subTitleTextView
+        init {
+            viewItem.setOnClickListener { listener(adapterPosition) }
+            viewItem.doneCheckBox.setOnClickListener {
+                listenerCheckBox(
+                    adapterPosition,
+                    (it as CheckBox).isChecked
+                )
+            }
+        }
 
     }
 
@@ -61,7 +71,7 @@ class NoteAdapter(val notes: ArrayList<NoteBoss>, private val listener: (Long) -
         return if (viewType == DETAILS_TYPE) { // for call layout
             view1 = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_note_details, parent, false)
-            ViewHolderDetails(view1, listener)
+            ViewHolderDetails(view1, listener, listenerCheckBox)
         } else { // for email layout
             view1 = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_note_header, parent, false)
@@ -87,8 +97,8 @@ class NoteAdapter(val notes: ArrayList<NoteBoss>, private val listener: (Long) -
         notes.clear()
         try {
             notes.addAll(myNotes!!)
-        }catch (e:Exception){
-            println("AAmr -> problem from note adapter $e")
+        } catch (e: Exception) {
+//            println("AAmr -> problem from note adapter $e")
         }
         notifyDataSetChanged()
     }

@@ -20,4 +20,7 @@ interface CategoryDao {
 
     @Query("DELETE FROM category where id != -1 ")
     fun deleteAll()
+
+    @Query("SELECT EXISTS(SELECT * FROM category WHERE id = :id)")
+    fun isRowExist(id : Long) : Boolean
 }

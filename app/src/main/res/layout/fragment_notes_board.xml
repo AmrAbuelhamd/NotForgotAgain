@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
 
         <variable
@@ -17,10 +18,10 @@
         tools:context=".view.noteboard.NotesBoardFragment">
 
         <include
-            layout="@layout/toolbar_application"
             android:id="@+id/toolbarView"
-            app:layout_constraintStart_toStartOf="parent"
+            layout="@layout/toolbar_application"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
@@ -41,14 +42,50 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="32dp"
             android:backgroundTint="@android:color/black"
-            app:borderWidth="0dp"
             android:clickable="true"
             android:src="@drawable/ic_plus"
+            app:borderWidth="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
         <include
             android:id="@+id/here_must_be_id_or_no_databinding"
-            android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}"
-            layout="@layout/loading_state" />
+            layout="@layout/loading_state"
+            android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}" />
+
+        <ImageView
+            android:id="@+id/emptyStateImage"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/empty_state"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/emptystateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/emptyStateString"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/guideline2" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/emptyStateGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.notes.size() !=0 ? View.GONE : View.VISIBLE}"
+            app:constraint_referenced_ids="emptyStateImage,emptystateTextView" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="234dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

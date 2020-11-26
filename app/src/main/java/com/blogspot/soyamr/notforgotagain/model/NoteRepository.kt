@@ -57,7 +57,7 @@ object NoteRepository {
 //        val category = Category(newCategory, categoryDao.getBiggestId() + 1)
 //        categoryDao.insertCategory(category)
 //    }
-//
+
     fun addNewNote(
         currentUserId: Long?,
         categorySpinnerTextId: Long,
@@ -66,8 +66,6 @@ object NoteRepository {
         headerTextLayout: String,
         descriptionTextLayout: String
     ): Note {
-        Log.i("hie: ", " )))) " + categorySpinnerTextId)
-        Log.i("hie: ", " )))) " + prioritySpinnerTextId)
 
         val note = Note(
             (++catNo).toLong(),
@@ -85,12 +83,11 @@ object NoteRepository {
     suspend fun getNotes(): Result<ArrayList<NoteBoss>> {
         return withContext(Dispatchers.IO) {
             try {
-                val cats = categoryDao.getAll()
-                println("AAmr cats repo ${cats}")
+                val cats = categoryDao.getAll().toMutableList()
+                cats.removeFirst()
                 val notes = ArrayList<NoteBoss>()
                 cats.forEach {
                     val notesOfCategory = noteDao.getFullNoteDataRelatedToCategory(it.id)
-                    println("AAmr notesOfCategory: repo ${notesOfCategory}")
                     notes.add(NoteBoss(null, it))
                     notesOfCategory.forEach {
                         notes.add(NoteBoss(it, null))
@@ -98,7 +95,6 @@ object NoteRepository {
                 }
                 Result.Success(notes)
             } catch (e: Exception) {
-                println("AAmr getNotes() $tag ->> $e")
                 Result.Error(Exception("AAmr Can't fetch data from local cash"))
             }
         }
@@ -153,7 +149,7 @@ object NoteRepository {
                 //get data from api and send them to database [let's say there will be no problem from database]
                 try {
                     val updatedTasks = apiService.getTasks()
-                    println("AAmr updatedTasks: $updatedTasks")
+//                    println("AAmr updatedTasks: $updatedTasks")
                     val cats = updatedTasks.map { it.toDataBaseCategory() }
                     val priority = updatedTasks.map { it.toDataBasePriority() }
                     val notes = updatedTasks.map { it.toDataBaseNote() }
@@ -163,7 +159,7 @@ object NoteRepository {
                     noteDao.insertNote(notes)
                     Result.Success("everything is good")
                 } catch (e: Exception) {
-                    println("AAmr $tag ->> $e")
+//                    println("AAmr $tag ->> $e")
                     Result.Error(Exception("can't fetch data from server"))
                 }
             } else {
@@ -269,7 +265,7 @@ object NoteRepository {
         return nots1;
     }
 
-    suspend fun logOutUser() {
+    suspend fun logOutUser() =
         withContext(Dispatchers.IO) {
             context.deleteDatabase("notes_database")
             val defaultToken = context.resources.getString(R.string.defaultToken)
@@ -278,9 +274,42 @@ object NoteRepository {
                 apply()
             }
         }
-    }
+
 
     fun getLiveNotes() =
         noteDao.getAll()
 
+    //in case user is offline change locally and say nothing.
+    //first check internet YES modify there then locally if no show error
+    suspend fun markNoteAsDone(noteId: Long, checked: Boolean): Result<String> =
+        withContext(Dispatchers.IO) {
+            val note = noteDao.getNote(noteId)
+            if(note.done){
+                return@withContext Result.Success("everything is good offline")
+            }
+            if (note.isSavedToApi == false) {
+                if (checked) noteDao.setDone(noteId)
+                return@withContext Result.Success("everything is good offline")
+            }
+            if (isOnline()) {
+                val updatedTask = note.toUpdatedTask(done = if (checked) 1 else 0)
+                val result: Task
+                try {
+                    result = apiService.updateTask(updatedTask, noteId)
+                } catch (e: Exception) {
+                    return@withContext Result.Error(Exception("network problem, $e"))
+                }
+                val cat = result.toDataBaseCategory()
+                if (!categoryDao.isRowExist(cat.id))
+                    categoryDao.insertCategory(listOf(cat))
+                val priority = result.toDataBasePriority()
+                if (!priorityDao.isRowExist(priority.id))
+                    priorityDao.insertPriority(listOf(priority))
+                noteDao.delete(note)
+                noteDao.insertNote(listOf(result.toDataBaseNote()))
+                return@withContext Result.Success("everything is good")
+            } else {
+                return@withContext Result.Error(Exception("you are offline changes couldn't be saved"))
+            }
+        }
 }

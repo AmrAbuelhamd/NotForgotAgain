@@ -9,7 +9,7 @@ data class FullNoteData(
     val nId:Long,
     val nTitle: String,
     val nDescription: String?,
-    val nDone: Boolean = false,
+    val nDone: Boolean,
     val nDeadline: Long?,
     val nCreated: Long?,
 )

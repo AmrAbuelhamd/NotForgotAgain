@@ -15,9 +15,6 @@ interface NoteDao {
     @Query("UPDATE note set done = 1 where id = :id")
     fun setDone(id: Long)
 
-    @Query("UPDATE note set done = 0 where id = :id")
-    fun setUnDone(id: Long)
-
     @Query("delete from note where id = :id")
     fun deleteNote(id: Long)
 

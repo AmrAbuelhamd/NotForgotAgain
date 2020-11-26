@@ -10,7 +10,7 @@ data class Task(
     val id: Long,
     val title: String,
     val description: String?,
-    val done: Int = 0,
+    val done: Int,
     val deadline: Long?,
     val category: Category,
     val priority: Priority,

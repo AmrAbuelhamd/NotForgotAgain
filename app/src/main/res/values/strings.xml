@@ -29,6 +29,7 @@
     <string name="preference_file_key">sharedPrefSmartName</string>
     <string name="tokenKey">tokenSmartName</string>
     <string name="defaultToken">no token</string>
+    <string name="emptyStateString">Пока что у вас нет никаких дел. <br/>Хорошего отдыха!</string>
 
 
     <string-array name="planets_array">

@@ -18,4 +18,7 @@ interface PriorityDao {
     @Query("DELETE FROM priority where id != -1 ")
     fun deleteAll()
 
+    @Query("SELECT EXISTS(SELECT * FROM priority WHERE id = :id)")
+    fun isRowExist(id : Long) : Boolean
+
 }

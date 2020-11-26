@@ -26,7 +26,7 @@
             android:textColor="@android:color/white"
             android:textStyle="bold"
             android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/checkBox"
+            app:layout_constraintEnd_toStartOf="@+id/doneCheckBox"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -43,13 +43,13 @@
             android:textColor="@android:color/white"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/checkBox"
+            app:layout_constraintEnd_toStartOf="@+id/doneCheckBox"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/titleTextView" />
 
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/doneCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@android:color/white"

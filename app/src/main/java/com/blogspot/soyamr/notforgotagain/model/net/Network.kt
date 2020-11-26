@@ -15,11 +15,9 @@ object Network {
             if (request.header("No-Authentication") == null) {
                 if (token.isNotEmpty()) {
                     val finalToken = "Bearer $token"
-                    println(" AAmr finalToken: $finalToken")
                     request = request.newBuilder()
                         .addHeader("Authorization", finalToken)
                         .build()
-                    println("AAmr request header  ${request.headers}")
                 }
             }
             chain.proceed(request)
@@ -28,7 +26,6 @@ object Network {
 
     fun updateToken(token: String) {
         this.token = token
-        println("AAmr netweok updated token ${token}")
     }
 
 

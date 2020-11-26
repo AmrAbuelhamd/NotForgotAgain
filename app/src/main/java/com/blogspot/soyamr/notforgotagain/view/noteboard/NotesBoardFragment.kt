@@ -28,30 +28,11 @@ class NotesBoardFragment : Fragment() {
         binding.viewModel = viewModel
 
         setClickListener()
-        setupRecyclerView2();
+        setupRecyclerView();
 
         viewModel.notes.observe(viewLifecycleOwner, Observer { myNotes ->
             myAdapter.updateData(myNotes)
         })
-
-//        val repository = NoteRepository(requireContext())
-//        notes.clear()
-//        val cats = repository.getCategoriesNet()
-//        Log.e("board ", " " + cats.toString())
-//
-//        val nots = repository.getNotesNet()
-//
-//        cats?.forEach { ca ->
-//            Log.e("notboard: ", " category-: " + ca.toString())
-//            notes.add(NoteBoss2(null, ca))
-//            nots?.forEach {
-//                Log.e("notboard2: ", " task-: " + it.toString())
-//                if (it.category?.id == ca.id)
-//                    notes.add(NoteBoss2(it, null))
-//            }
-//        }
-//        myAdapter.notifyDataSetChanged()
-
     }
 
     private val repository: NoteRepository by lazy { NoteRepository(requireContext()) }
@@ -64,13 +45,12 @@ class NotesBoardFragment : Fragment() {
         toolBar.post {
             toolBar.inflateMenu(R.menu.sign_out)
         }
-        val repository = NoteRepository(requireContext())
+
         toolBar.setOnMenuItemClickListener {
             viewModel.logOutUser()
             findNavController().navigate(
                 NotesBoardFragmentDirections.actionNotesBoardFragmentToSignInFragment()
             )
-//            repository.signMeOut(currentUserId!!)
             true
         }
 
@@ -86,14 +66,14 @@ class NotesBoardFragment : Fragment() {
 
 
     lateinit var myAdapter: NoteAdapter
-    private fun setupRecyclerView2() {
-        myAdapter = NoteAdapter(notes) { noteId ->
+    private fun setupRecyclerView() {
+        myAdapter = NoteAdapter(notes, { position ->
             findNavController().navigate(
-                NotesBoardFragmentDirections.actionNotesBoardFragmentToNoteDetailsFragment(
-                    noteId
-                )
+                NotesBoardFragmentDirections.actionNotesBoardFragmentToNoteDetailsFragment(notes[position].note?.nId!!)
             )
-        }
+        }, { position, checked ->
+            viewModel.onCheckBoxClicked(notes[position].note?.nId!!, checked)
+        })
 
         val myViewManager = LinearLayoutManager(context)
         val recyclerView = notesRecycler.apply {
@@ -105,36 +85,6 @@ class NotesBoardFragment : Fragment() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-//        val repository = NoteRepository(requireContext())
-//
-//        notes.clear()
-//        val cats = repository.getCategories()
-//        cats.forEach {
-//            val notesOfCategory = repository.getFullNoteDataRelatedToCategory(it.id);
-//            notes.add(NoteBoss(null, it))
-//            notesOfCategory.forEach {
-//                notes.add(NoteBoss(it, null))
-//            }
-//        }
-
-//        val repository = NoteRepository(requireContext())
-//        notes.clear()
-//        val cats = repository.getCategoriesNet()
-//        val nots = repository.getNotesNet()
-//        cats?.forEach{ca->
-//            notes.add(NoteBoss2(null, ca))
-//            nots?.forEach {
-//                if(it.category?.id==ca.id)
-//                    notes.add(NoteBoss2(it, null))
-//            }
-//        }
-//
-//
-//
-//        myAdapter.notifyDataSetChanged()
-    }
 
     lateinit var binding: FragmentNotesBoardBinding
 

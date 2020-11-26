@@ -1,13 +1,7 @@
 package com.blogspot.soyamr.notforgotagain.model.net
 
-import com.blogspot.soyamr.notforgotagain.model.net.pojo.Category
-import com.blogspot.soyamr.notforgotagain.model.net.pojo.LoginUser
-import com.blogspot.soyamr.notforgotagain.model.net.pojo.Task
-import com.blogspot.soyamr.notforgotagain.model.net.pojo.UserToken
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.POST
+import com.blogspot.soyamr.notforgotagain.model.net.pojo.*
+import retrofit2.http.*
 
 interface TaskApiService {
 
@@ -20,4 +14,9 @@ interface TaskApiService {
 
     @GET("categories")
     suspend fun getCategories(): List<Category>
+
+    @PATCH("tasks/{id}")
+    suspend fun updateTask(@Body updatedTask: UpdatedTask, @Path("id") id: Long): Task
+
+
 }
