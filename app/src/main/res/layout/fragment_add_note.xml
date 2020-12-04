@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
 
         <variable
@@ -28,17 +29,16 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            app:errorText="@{viewModel.titleErrorMessage}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/includedActionBar"
-            app:errorText="@{viewModel.titleErrorMessage}"
-            >
+            app:layout_constraintTop_toBottomOf="@+id/includedActionBar">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/header"
-                android:text="@={viewModel.titleText}"/>
+                android:text="@={viewModel.titleText}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -51,9 +51,9 @@
             android:layout_marginEnd="16dp"
             app:counterEnabled="true"
             app:counterMaxLength="50"
+            app:errorText="@{viewModel.descErrorMessage}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:errorText="@{viewModel.descErrorMessage}"
             app:layout_constraintTop_toBottomOf="@+id/headerTextLayout">
 
 
@@ -61,8 +61,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/description"
-                android:text="@={viewModel.descText}"
-                android:maxLines="5" />
+                android:maxLines="5"
+                android:text="@={viewModel.descText}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <FrameLayout
@@ -109,11 +109,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="24dp"
+            app:errorText="@{viewModel.dateErrorMessage}"
             app:layout_constraintEnd_toStartOf="@+id/showCalendarButtonView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionTextLayout"
-            app:errorText="@{viewModel.dateErrorMessage}"
-            >
+            app:layout_constraintTop_toBottomOf="@+id/descriptionTextLayout">
 
 
             <com.google.android.material.textfield.TextInputEditText
@@ -122,8 +121,8 @@
                 android:layout_height="wrap_content"
                 android:background="@color/mygrey"
                 android:hint="@string/deadline"
-                android:text="@={viewModel.dateText}"
-                android:inputType="date" />
+                android:inputType="date"
+                android:text="@={viewModel.dateText}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -160,10 +159,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/dateText" />
 
-        <include
-            android:id="@+id/here_must_be_id_or_no_databinding"
-            android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}"
-            layout="@layout/loading_state" />
-
+        <!--        <include
+                    android:id="@+id/here_must_be_id_or_no_databinding"
+                    android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}"
+                    layout="@layout/loading_state" />
+                    -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="16dp">
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/success" />
+        </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

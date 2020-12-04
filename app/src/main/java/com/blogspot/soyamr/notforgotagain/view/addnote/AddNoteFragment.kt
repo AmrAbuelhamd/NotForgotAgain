@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Spinner
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
@@ -107,7 +108,6 @@ class AddNoteFragment : Fragment() {
     }
 
     private fun setListeners() {
-        //todo move to fragment.xml
         saveDataButtonView.setOnClickListener {
             viewModel.addNewNote(categorySpinner.selectedItemId, prioritySpinner.selectedItemId)
         }
@@ -136,6 +136,36 @@ class AddNoteFragment : Fragment() {
             viewModel.addNewCategory(newCategory!!)
         }
 
+        // This callback will only be called when MyFragment is at least Started.
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object :
+            OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                saveDataDialog()
+            }
+        })
+
+    }
+
+    fun saveDataDialog() {
+        val alertDialog: AlertDialog? = activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setTitle("Alert")
+                setMessage("want to save changes?")
+                setPositiveButton(R.string.ok
+                ) { dialog, _ ->
+                    viewModel.addNewNote(categorySpinner.selectedItemId, prioritySpinner.selectedItemId)
+                    dialog.dismiss()
+                }
+                setNegativeButton(R.string.cancel
+                ) { dialog, _ ->
+                    findNavController().popBackStack()
+                    dialog.dismiss()
+                }
+            }
+            builder.create()
+        }
+        alertDialog?.show()
     }
 
     private fun setUpSpinner(view: View) {
@@ -178,7 +208,5 @@ class AddNoteFragment : Fragment() {
         return binding.root
 
     }
-
-
 
 }

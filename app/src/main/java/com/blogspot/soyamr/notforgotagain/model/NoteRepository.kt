@@ -155,7 +155,7 @@ object NoteRepository {
                     return@withContext Result.Error(Exception("can't fetch data from server ${e.message.toString()}"))
                 }
             } else {
-                return@withContext Result.Error(Exception("no internet"))
+                return@withContext Result.Error(Exception("no internet, this data comes from local cash"))
             }
         }
 
