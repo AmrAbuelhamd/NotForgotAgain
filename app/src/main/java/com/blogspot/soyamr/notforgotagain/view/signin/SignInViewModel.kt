@@ -78,7 +78,7 @@ class SignInViewModel(private val repository: NoteRepository) : ViewModel() {
         if (!passwordText.value.isValidPassword()) {
             _passwordErrorMessage.value =
                 "Invalid Password, password should contain {digit, lower case, upper case, no whitespace, 4 digits at least}"
-            result = false
+            //result = false
         } else {
             _passwordErrorMessage.value = ""
         }

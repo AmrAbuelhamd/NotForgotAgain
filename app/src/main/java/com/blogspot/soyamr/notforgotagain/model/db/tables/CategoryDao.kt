@@ -2,6 +2,7 @@ package com.blogspot.soyamr.notforgotagain.model.db.tables
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 
@@ -26,5 +27,11 @@ interface CategoryDao {
     fun deleteAll()
 
     @Query("SELECT EXISTS(SELECT * FROM category WHERE id = :id)")
-    fun isRowExist(id : Long) : Boolean
+    fun isRowExist(id: Long): Boolean
+
+    @Delete
+    fun delete(category: Category)
+
+    @Query("select max(id) from category")
+    fun getMaxId(): Long
 }

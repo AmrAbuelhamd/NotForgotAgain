@@ -7,10 +7,7 @@ import android.net.NetworkCapabilities
 import com.blogspot.soyamr.notforgotagain.R
 import com.blogspot.soyamr.notforgotagain.domain.NoteBoss
 import com.blogspot.soyamr.notforgotagain.model.db.NotesDataBase
-import com.blogspot.soyamr.notforgotagain.model.db.tables.CategoryDao
-import com.blogspot.soyamr.notforgotagain.model.db.tables.Note
-import com.blogspot.soyamr.notforgotagain.model.db.tables.NoteDao
-import com.blogspot.soyamr.notforgotagain.model.db.tables.PriorityDao
+import com.blogspot.soyamr.notforgotagain.model.db.tables.*
 import com.blogspot.soyamr.notforgotagain.model.net.Network
 import com.blogspot.soyamr.notforgotagain.model.net.TaskApiService
 import com.blogspot.soyamr.notforgotagain.model.net.pojo.*
@@ -31,6 +28,7 @@ object NoteRepository {
     private lateinit var noteDao: NoteDao
     private lateinit var categoryDao: CategoryDao
     private lateinit var priorityDao: PriorityDao
+    private lateinit var deletedNotesIdsDao: DeletedNotesIdsDao
     private lateinit var apiService: TaskApiService
     private lateinit var sharedPref: SharedPreferences
     private lateinit var context: Context
@@ -43,6 +41,7 @@ object NoteRepository {
         noteDao = db.noteDao()
         categoryDao = db.categoryDao()
         priorityDao = db.priorityDao()
+        deletedNotesIdsDao = db.deletedNotesIdsDao()
 
         sharedPref = context.getSharedPreferences(
             context.resources.getString(R.string.preference_file_key),
@@ -114,23 +113,32 @@ object NoteRepository {
             if (isOnline()) {
                 //get un Submitted notes and send them to api
                 try {
-                    val unSubmittedNotes = noteDao.getUnSubmittedNotes()
-                    //val unSubmittedCats = categoryDao.getUnSubmittedCategories()
-                    if (/*unSubmittedCats.isNotEmpty() ||*/ unSubmittedNotes.isNotEmpty()) {
-
-//                        unSubmittedCats.forEach {
-//                            val serverCategory = apiService.addNewCategory(it.toNetPojo())
-//                            categoryDao.delete(it)
-//                            categoryDao.insertCategory(serverCategory.toDataBaseCategory())
-//                        }
-
-                        unSubmittedNotes.forEach {
-                            val note = apiService.addNewTask(it.toNetPojoTask())
-                            noteDao.delete(it)
-                            noteDao.insertNote(listOf(note.toDataBaseNote()))
-                        }
+                    //these are on server and need to be deleted first
+                    val notesToDelete = deletedNotesIdsDao.getAll()
+                    notesToDelete.forEach {
+                        apiService.deleteNote(it.id.toInt())
+                        deletedNotesIdsDao.delete(it)
                     }
 
+                    val unSubmittedCats = categoryDao.getUnSubmittedCategories()
+                    //send category, send notes related to that category, delete them
+                    unSubmittedCats.forEach {
+                        val serverCategory = apiService.addNewCategory(it.toNetPojo())
+                        val notesRelatedToThisCategory =
+                            noteDao.getFullNoteDataRelatedToCategory(it.id)
+                        notesRelatedToThisCategory.forEach {
+                            apiService.addNewTask(it.toNetTask(parentCategoryId = serverCategory.id))
+                            noteDao.deleteNote(it.nId)
+                        }
+                        categoryDao.delete(it)
+                    }
+                    //these notes aren't connected to any offline category
+                    val unSubmittedNotes = noteDao.getUnSubmittedNotes()
+                    unSubmittedNotes.forEach {
+                        val note = apiService.addNewTask(it.toNetPojoTask())
+                        noteDao.delete(it)
+                        noteDao.insertNote(listOf(note.toDataBaseNote()))
+                    }
                 } catch (e: Exception) {
                     println("$tag ->> $e")
                     return@withContext Result.Error(Exception("can't update remote server \n{${e.message.toString()}}"))
@@ -163,6 +171,7 @@ object NoteRepository {
         noteDao.deleteAll()
         categoryDao.deleteAll()
         priorityDao.deleteAll()
+        deletedNotesIdsDao.deleteAll()
         // context.deleteDatabase("notes_database")
     }
 
@@ -193,7 +202,10 @@ object NoteRepository {
                 categoryDao.insertCategory(listOf(cat))
                 return@withContext Result.Success(cat)
             } else {
-                return@withContext Result.Error(Exception("you are offline changes couldn't be saved"))
+                val id = categoryDao.getMaxId() + 1
+                val offlineCategory = dbCategory(id, newCategoryString, false)
+                categoryDao.insertCategory(listOf(offlineCategory))
+                return@withContext Result.Success(offlineCategory)
             }
         }
 
@@ -313,6 +325,26 @@ object NoteRepository {
             noteDao.insertNote(listOf(result.toDataBaseNote()))
             return@withContext Result.Success("updates saved to api")
         } else {
+            val note = noteDao.getNote(noteId)
+            if (note.isSavedToApi == false) {
+                noteDao.deleteNote(noteId)
+                noteDao.insertNote(
+                    listOf(
+                        Note(
+                            noteId,
+                            title,
+                            desc,
+                            false,
+                            deadline,
+                            0,
+                            categorySpinnerId,
+                            prioritySpinnerId,
+                            false
+                        )
+                    )
+                )
+                return@withContext Result.Success("everything is good offline")
+            }
             return@withContext Result.Error(Exception("you are offline changes couldn't be saved"))
         }
     }
@@ -329,7 +361,7 @@ object NoteRepository {
             val task = NewTask(title, desc, 0, deadline, categorySpinnerId, prioritySpinnerId)
             val result: Task
             try {
-                println("task: ${task.toString()}")
+                println("task: $task")
                 result = apiService.addNewTask(task)
             } catch (e: Exception) {
                 return@withContext Result.Error(Exception("network problem, ${e.message.toString()}"))
@@ -394,7 +426,15 @@ object NoteRepository {
                 }
                 return@withContext Result.Success("note deleted successfully")
             } else {
-                return@withContext Result.Error(Exception("you are offline changes not saved"))
+                val note = noteDao.getNote(id)
+                if (!note.isSavedToApi!!) {
+                    noteDao.deleteNote(id)
+                    return@withContext Result.Success("note deleted successfully")
+                } else {
+                    deletedNotesIdsDao.insert(DeletedNotesIds(id))
+                    noteDao.deleteNote(id)
+                    return@withContext Result.Success("note deleted offline")
+                }
             }
         }
 }
