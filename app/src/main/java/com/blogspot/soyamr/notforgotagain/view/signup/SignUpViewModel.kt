@@ -1,67 +1,64 @@
-package com.blogspot.soyamr.notforgotagain.view.signin
+package com.blogspot.soyamr.notforgotagain.view.signup
 
 import androidx.lifecycle.*
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import com.blogspot.soyamr.notforgotagain.model.Result
-import com.blogspot.soyamr.notforgotagain.model.net.pojo.LoginUser
 import com.blogspot.soyamr.notforgotagain.view.SingleLiveEvent
 import com.blogspot.soyamr.notforgotagain.view.util.isValidEmail
 import com.blogspot.soyamr.notforgotagain.view.util.isValidPassword
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-// Override ViewModelProvider.NewInstanceFactory to create the ViewModel (VM).
-class SignInViewModelFactory(private val repository: NoteRepository) :
+class SignUpViewModelFactory(
+    private val repository: NoteRepository
+) :
     ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T = SignInViewModel(repository) as T
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
+        SignUpViewModel(repository) as T
 }
 
-class SignInViewModel(private val repository: NoteRepository) : ViewModel() {
+class SignUpViewModel(val repository: NoteRepository) : ViewModel() {
+    private val tag = "SignUpViewModel"
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> = _isLoading
+    private val _success = SingleLiveEvent<Boolean>()
+    val success: LiveData<Boolean> = _success
 
     private val _passwordErrorMessage = MutableLiveData("")
+    private val _repeatPasswordErrorMessage = MutableLiveData("")
     private val _emailErrorMessage = MutableLiveData("")
-    private val _isLoading = MutableLiveData(true)
-    private val _errorMessageSnakeBar = MutableLiveData("")
+    private val _nameErrorMessage = MutableLiveData("")
 
+    val nameText = MutableLiveData("")
     val emailText = MutableLiveData("")
     val passwordText = MutableLiveData("")
+    val repeatPasswordText = MutableLiveData("")
 
 
+    val nameErrorMessage: LiveData<String> = _nameErrorMessage
     val emailErrorMessage: LiveData<String> = _emailErrorMessage
+    val repeatPasswordErrorMessage: LiveData<String> = _repeatPasswordErrorMessage
     val passwordErrorMessage: LiveData<String> = _passwordErrorMessage
-    val isLoading: LiveData<Boolean> = _isLoading
-    val doWeHaveAlreadySignedInUser = SingleLiveEvent<Boolean>()
 
+
+    private val _errorMessageSnakeBar = MutableLiveData("")
     val errorMessageSnakeBar: LiveData<String> = _errorMessageSnakeBar
 
-    init {
-        doWeHaveSignedInUser()
-    }
 
-    private fun doWeHaveSignedInUser() {
-        viewModelScope.launch(Dispatchers.Main) {
+    fun signUp() {
+        viewModelScope.launch {
             _isLoading.value = true
-            val ans = repository.doWeHaveToken()
-            doWeHaveAlreadySignedInUser.value = ans
-            _isLoading.value = false
-        }
-    }
-
-    fun logIn() {
-        viewModelScope.launch() {
             if (isValidInput()) {
-                _isLoading.value = true
                 when (val result =
-                    repository.logIn(LoginUser(emailText.value!!, passwordText.value!!))) {
-                    is Result.Success<Boolean> -> {
-                        doWeHaveAlreadySignedInUser.value = result.data!!
+                    repository.signUp(nameText.value!!, emailText.value!!, passwordText.value!!)) {
+                    is Result.Success<String> -> {
+                        _success.value = true
                     }
                     else -> {
                         _errorMessageSnakeBar.value = (result as Result.Error).exception.message
                     }
                 }
-                _isLoading.value = false
             }
+            _isLoading.value = false
         }
     }
 
@@ -82,7 +79,25 @@ class SignInViewModel(private val repository: NoteRepository) : ViewModel() {
         } else {
             _passwordErrorMessage.value = ""
         }
-        println("resultt $result")
+
+        if (repeatPasswordText.value != passwordText.value) {
+            _repeatPasswordErrorMessage.value =
+                "passwords don't match"
+            result = false
+        } else {
+            _repeatPasswordErrorMessage.value = ""
+        }
+
+        if (nameText.value.isNullOrEmpty()) {
+            _nameErrorMessage.value =
+                "write your name please"
+            result = false
+        } else {
+            _nameErrorMessage.value = ""
+        }
+
         return result
     }
+
+
 }

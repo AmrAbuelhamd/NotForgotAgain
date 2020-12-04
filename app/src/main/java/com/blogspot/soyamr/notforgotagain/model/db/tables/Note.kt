@@ -3,6 +3,7 @@ package com.blogspot.soyamr.notforgotagain.model.db.tables
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.blogspot.soyamr.notforgotagain.model.net.pojo.NewTask
 import com.blogspot.soyamr.notforgotagain.model.net.pojo.UpdatedTask
 
 
@@ -44,6 +45,15 @@ data class Note(
         title,
         description,
         done,
+        deadline,
+        parentCategoryId,
+        parentPriorityId
+    )
+
+    fun toNetPojoTask() = NewTask(
+        title,
+        description,
+        if (this.done) 1 else 0,
         deadline,
         parentCategoryId,
         parentPriorityId

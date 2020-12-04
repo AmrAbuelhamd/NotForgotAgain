@@ -1,6 +1,6 @@
 package com.blogspot.soyamr.notforgotagain.view.signin
 
-import android.content.Context
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,20 +20,29 @@ import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 
 
-class SignInFragment : Fragment(), SignInView {
+class SignInFragment : Fragment() {
 
-    // private lateinit var presenter: SignInPresenter
     private val repository: NoteRepository by lazy { NoteRepository(requireContext()) }
     private val viewModel: SignInViewModel by viewModels { SignInViewModelFactory(repository) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // presenter = SignInPresenter(this)
-        //presenter.checkSignedIn()
-
         setUpViewModelCalls()
 
 
         setActionBar(view)
         setOnClickListeners()
+    }
+
+
+    private fun showError(errorMessage: String) {
+        if (errorMessage.isNullOrEmpty())
+            return
+        val alertDialog: AlertDialog = AlertDialog.Builder(requireContext()).create()
+        alertDialog.setTitle("Error")
+        alertDialog.setMessage(errorMessage)
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK"
+        ) { dialog, _ -> dialog.dismiss() }
+        alertDialog.show()
+
     }
 
     private fun setUpViewModelCalls() {
@@ -46,6 +55,12 @@ class SignInFragment : Fragment(), SignInView {
                 )
             }
         })
+
+        viewModel.errorMessageSnakeBar.observe(viewLifecycleOwner, Observer {
+            showError(it)
+        })
+
+
     }
 
     private fun setActionBar(view: View) {
@@ -77,26 +92,5 @@ class SignInFragment : Fragment(), SignInView {
 
         return binding.root
     }
-
-    override fun getRequiredContext(): Context {
-        return requireContext()
-    }
-
-    override fun moveToNoteBoard(userId: Long) {
-        findNavController().navigate(
-            SignInFragmentDirections.actionSignInFragmentToNotesBoardFragment()
-        )
-    }
-
-    override fun setSignInError() {
-        emailTextInputLayout.error = "wrong user name or password"
-    }
-
-    override fun showProgressBar() {
-//        loadingDialogFragment.show()
-    }
-
-    override fun hidProgressBar() {
-//        loadingDialogFragment.hide()
-    }
 }
+

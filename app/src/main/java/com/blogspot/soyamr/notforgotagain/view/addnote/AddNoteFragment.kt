@@ -1,8 +1,7 @@
 package com.blogspot.soyamr.notforgotagain.view.addnote
 
-import android.content.Context
+import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,14 +18,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.blogspot.soyamr.notforgotagain.R
 import com.blogspot.soyamr.notforgotagain.databinding.FragmentAddNoteBinding
-import com.blogspot.soyamr.notforgotagain.domain.GeneralData
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
-import com.blogspot.soyamr.notforgotagain.model.db.tables.Note
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_add_note.*
 
 
-class AddNoteFragment : Fragment(), AddNoteView {
-    private lateinit var presenter: AddNotePresenter
+class AddNoteFragment : Fragment() {
     lateinit var categorySpinnerAdapter: SpinnerAdapter
     lateinit var prioritySpinnerAdapter: SpinnerAdapter
 
@@ -41,6 +38,19 @@ class AddNoteFragment : Fragment(), AddNoteView {
             repository,
             currentNoteId!!
         )
+    }
+
+
+    private fun showError(errorMessage: String) {
+        if (errorMessage.isNullOrEmpty())
+            return
+        val alertDialog: AlertDialog = AlertDialog.Builder(requireContext()).create()
+        alertDialog.setTitle("Error")
+        alertDialog.setMessage(errorMessage)
+        alertDialog.setButton(
+            AlertDialog.BUTTON_NEUTRAL, "OK"
+        ) { dialog, _ -> dialog.dismiss() }
+        alertDialog.show()
     }
 
 
@@ -62,28 +72,44 @@ class AddNoteFragment : Fragment(), AddNoteView {
 
     private fun setUpObservers() {
         toolBar.title = viewModel.toolbarTitle
-        viewModel.categories.observe(viewLifecycleOwner, Observer { cats ->
+        viewModel.categories.observe(viewLifecycleOwner, { cats ->
             categorySpinnerAdapter.addItems(cats, categorySpinner)
         })
-        viewModel.priorities.observe(viewLifecycleOwner, Observer { prts ->
+        viewModel.priorities.observe(viewLifecycleOwner, { prts ->
             prioritySpinnerAdapter.addItems(prts, prioritySpinner)
         })
+
+        viewModel.selectedPriority.observe(viewLifecycleOwner, { item ->
+            prioritySpinner.setSelection(prioritySpinnerAdapter.getPosition(item), false)
+        })
+        viewModel.selectedCategory.observe(viewLifecycleOwner, { item ->
+            categorySpinner.setSelection(categorySpinnerAdapter.getPosition(item), false)
+        })
+        viewModel.success.observe(viewLifecycleOwner, { item ->
+            if (item)
+                findNavController().navigate(R.id.action_addNoteFragment_to_notesBoardFragment)
+        })
+
+        viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
+            showError(it)
+        })
+
+        viewModel.snackBarMessage.observe(viewLifecycleOwner, Observer {
+            showErrorSnackBar(it)
+        })
+
     }
 
+    private fun showErrorSnackBar(errorMessage: String) {
+        if (errorMessage.isNullOrEmpty())
+            return
+        Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_SHORT).show()
+    }
 
     private fun setListeners() {
         //todo move to fragment.xml
         saveDataButtonView.setOnClickListener {
-            presenter.saveNote(
-                currentNoteId,
-                categorySpinner.selectedItemId,
-                prioritySpinner.selectedItemId,
-                dateText.editText?.text.toString(),
-                headerTextLayout.editText?.text.toString(),
-                descriptionTextLayout.editText?.text.toString()
-            )
-            Log.i("hie: ", " )))) " + categorySpinner.selectedItem)
-            Log.i("hie: ", " )))) " + prioritySpinner.selectedItem)
+            viewModel.addNewNote(categorySpinner.selectedItemId, prioritySpinner.selectedItemId)
         }
         // Use the Kotlin extension in the fragment-ktx artifact
         setFragmentResultListener(REQUEST_DATE_KEY) { key, bundle ->
@@ -107,7 +133,7 @@ class AddNoteFragment : Fragment(), AddNoteView {
         setFragmentResultListener(REQUEST_CATEGORY_KEY) { key, bundle ->
             // We use a String here, but any type that can be put in a Bundle is supported
             val newCategory = bundle.getString("categoryInputKey")
-            presenter.addNewCategory(newCategory!!)
+            viewModel.addNewCategory(newCategory!!)
         }
 
     }
@@ -153,44 +179,6 @@ class AddNoteFragment : Fragment(), AddNoteView {
 
     }
 
-    override fun getRequiredContext(): Context {
-        return requireContext()
-    }
-
-    override fun moveToNoteBoard(userId: Long) {
-        findNavController().navigate(
-            AddNoteFragmentDirections.actionAddNoteFragmentToNotesBoardFragment(
-//                userId
-            )
-        )
-    }
-
-    override fun setSignInError() {
-
-
-    }
-
-    override fun showProgressBar() {
-    }
-
-    override fun hidProgressBar() {
-    }
-
-    override fun populateCategorySpinnerData(categories: List<GeneralData>) {
-        categorySpinnerAdapter.addItems(categories, categorySpinner)
-    }
-
-    override fun populatePrioritySpinnerData(priorities: List<GeneralData>) {
-        prioritySpinnerAdapter.addItems(priorities, prioritySpinner)
-    }
-
-    override fun addNewNote(note: Note) {
-
-    }
-
-    override fun showError() {
-        headerTextLayout.error = "something went wrong"
-    }
 
 
 }

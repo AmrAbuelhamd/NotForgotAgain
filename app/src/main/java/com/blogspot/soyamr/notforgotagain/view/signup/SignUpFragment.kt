@@ -1,27 +1,50 @@
 package com.blogspot.soyamr.notforgotagain.view.signup
 
-import android.content.Context
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.blogspot.soyamr.notforgotagain.R
+import com.blogspot.soyamr.notforgotagain.databinding.FragmentSignUpBinding
+import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 
 
-class SignUpFragment : Fragment(), SignUpView {
-    private lateinit var presenter: SignUpPresenter
+class SignUpFragment : Fragment() {
 
-
+    private val repository: NoteRepository by lazy { NoteRepository(requireContext()) }
+    private val viewModel: SignUpViewModel by viewModels { SignUpViewModelFactory(repository) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        presenter = SignUpPresenter(this)
         setListeners()
         setActionBar(view)
+
+        setUpViewModelCalls()
+    }
+
+    private fun setUpViewModelCalls() {
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
+        viewModel.success.observe(viewLifecycleOwner, Observer {
+            if (it) {
+                findNavController().navigate(
+                    SignUpFragmentDirections.actionSignUpFragmentToSignInFragment()
+                )
+            }
+        })
+
+        viewModel.errorMessageSnakeBar.observe(viewLifecycleOwner, Observer {
+            showError(it)
+        })
     }
 
     private fun setActionBar(view: View) {
@@ -32,39 +55,33 @@ class SignUpFragment : Fragment(), SignUpView {
     }
 
     private fun setListeners() {
-        signUpButtonView.setOnClickListener {
-
-            val name = nameSignUpTextInputLayout.editText?.text.toString().trim()
-            val email = emailSignUpTextInputLayout.editText?.text.toString().trim()
-            val password = passwordSignUpTextInputLayout.editText?.text.toString().trim()
-            val repeatPassword = repeatPasswordSignUpTextInputLayout.editText?.text.toString().trim()
-
-            presenter.insertUser(name, email, password,repeatPassword)
-        }
-
         signInTextView.setOnClickListener(
             Navigation.createNavigateOnClickListener(
                 SignUpFragmentDirections.actionSignUpFragmentToSignInFragment()
             )
         )
     }
+    private fun showError(errorMessage: String) {
+        if (errorMessage.isNullOrEmpty())
+            return
+        val alertDialog: AlertDialog = AlertDialog.Builder(requireContext()).create()
+        alertDialog.setTitle("Error")
+        alertDialog.setMessage(errorMessage)
+        alertDialog.setButton(
+            AlertDialog.BUTTON_NEUTRAL, "OK"
+        ) { dialog, _ -> dialog.dismiss() }
+        alertDialog.show()
+    }
+
+    lateinit var binding: FragmentSignUpBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_sign_up, container, false);
-    }
+        // Inflate the layout for this fragment
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_sign_up, container, false)
 
-    override fun getRequiredContext(): Context {
-        return requireContext()
-    }
-
-    override fun goToLogInScreen() {
-        findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToSignInFragment())
-    }
-
-    override fun setSignUpError() {
-        emailSignUpTextInputLayout.error = "somethingwent wrong"
+        return binding.root
     }
 }

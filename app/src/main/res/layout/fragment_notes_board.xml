@@ -24,16 +24,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/notesRecycler"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swiperefresh"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:translationY="-4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarView" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbarView">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/notesRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/addNoteFloatingActionButton"
@@ -48,11 +53,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <include
-            android:id="@+id/here_must_be_id_or_no_databinding"
-            layout="@layout/loading_state"
-            android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}" />
-
+        <!--       <include
+                   android:id="@+id/here_must_be_id_or_no_databinding"
+                   layout="@layout/loading_state"
+                   android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}" />
+       -->
         <ImageView
             android:id="@+id/emptyStateImage"
             android:layout_width="wrap_content"

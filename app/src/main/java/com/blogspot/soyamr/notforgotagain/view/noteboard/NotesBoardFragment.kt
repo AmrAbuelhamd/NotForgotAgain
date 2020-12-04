@@ -9,14 +9,16 @@ import androidx.appcompat.widget.Toolbar
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.blogspot.soyamr.notforgotagain.R
 import com.blogspot.soyamr.notforgotagain.databinding.FragmentNotesBoardBinding
 import com.blogspot.soyamr.notforgotagain.domain.NoteBoss
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import com.blogspot.soyamr.notforgotagain.view.recycler_view_components.NoteAdapter
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_notes_board.*
 
 
@@ -30,9 +32,23 @@ class NotesBoardFragment : Fragment() {
         setClickListener()
         setupRecyclerView();
 
-        viewModel.notes.observe(viewLifecycleOwner, Observer { myNotes ->
+        viewModel.notes.observe(viewLifecycleOwner, { myNotes ->
             myAdapter.updateData(myNotes)
         })
+
+        viewModel.isLoading.observe(viewLifecycleOwner, { refresh ->
+            swiperefresh.isRefreshing = refresh
+        })
+
+        viewModel.errorMessageSnakeBar.observe(viewLifecycleOwner, {
+            showError(it)
+        })
+    }
+
+    private fun showError(errorMessage: String) {
+        if (errorMessage.isNullOrEmpty())
+            return
+        Snackbar.make(binding.root, errorMessage, Snackbar.LENGTH_SHORT).show()
     }
 
     private val repository: NoteRepository by lazy { NoteRepository(requireContext()) }
@@ -47,11 +63,20 @@ class NotesBoardFragment : Fragment() {
         }
 
         toolBar.setOnMenuItemClickListener {
-            viewModel.logOutUser()
-            findNavController().navigate(
-                NotesBoardFragmentDirections.actionNotesBoardFragmentToSignInFragment()
-            )
+            if (it.itemId == R.id.signOut) {
+                viewModel.logOutUser()
+                findNavController().navigate(
+                    NotesBoardFragmentDirections.actionNotesBoardFragmentToSignInFragment()
+                )
+            } else {
+                viewModel.refresh()
+            }
+
             true
+        }
+
+        swiperefresh.setOnRefreshListener {
+            viewModel.refresh()
         }
 
     }
@@ -82,7 +107,40 @@ class NotesBoardFragment : Fragment() {
             adapter = myAdapter
         }
 
+        val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback =
+            object : ItemTouchHelper.SimpleCallback(
+                0,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    return false
+                }
 
+                override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
+                    return if (viewHolder is NoteAdapter.ViewHolderHeader) 1f else super.getSwipeThreshold(
+                        viewHolder
+                    )
+                }
+
+                override fun getSwipeDirs(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder
+                ): Int {
+                    if (viewHolder is NoteAdapter.ViewHolderHeader) return 0
+                    return super.getSwipeDirs(recyclerView, viewHolder)
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
+                    val position = viewHolder.adapterPosition
+                    viewModel.removeItem(notes[position].note?.nId!!)
+                }
+            }
+
+        val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
 

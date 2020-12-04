@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.blogspot.soyamr.notforgotagain.view.addnote.AddNoteViewModel" />
@@ -28,7 +30,9 @@
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/includedActionBar">
+            app:layout_constraintTop_toBottomOf="@+id/includedActionBar"
+            app:errorText="@{viewModel.titleErrorMessage}"
+            >
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -49,6 +53,7 @@
             app:counterMaxLength="50"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:errorText="@{viewModel.descErrorMessage}"
             app:layout_constraintTop_toBottomOf="@+id/headerTextLayout">
 
 
@@ -92,7 +97,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/frameLayout">
 
-            <Spinner
+            <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/prioritySpinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -106,7 +111,9 @@
             android:layout_marginEnd="24dp"
             app:layout_constraintEnd_toStartOf="@+id/showCalendarButtonView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionTextLayout">
+            app:layout_constraintTop_toBottomOf="@+id/descriptionTextLayout"
+            app:errorText="@{viewModel.dateErrorMessage}"
+            >
 
 
             <com.google.android.material.textfield.TextInputEditText
@@ -153,6 +160,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/dateText" />
 
+        <include
+            android:id="@+id/here_must_be_id_or_no_databinding"
+            android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}"
+            layout="@layout/loading_state" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -30,23 +30,13 @@ class NoteDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val args = arguments?.let { NoteDetailsFragmentArgs.fromBundle(it) }
         currentNote = args?.nid
-//        showInfo()
+
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
 
         setClicks()
         setUpToolBar(view)
-    }
-
-    private fun showInfo() {
-        val repository = NoteRepository(requireContext())
-        val note = repository.getFullNoteData(currentNote!!)
-        mytitleTextView.text = note.nTitle
-        categoryTextView.text = note.cName
-        descTextView.text = note.nDescription
-        dateTextView.text = note.nCreated.toString()
-        isDoneTextView.text = if(note.nDone) "Выполнено" else "Не Выполнено"
     }
 
     private fun setUpToolBar(view: View) {

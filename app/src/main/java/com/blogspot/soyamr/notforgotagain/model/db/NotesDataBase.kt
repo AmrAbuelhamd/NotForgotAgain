@@ -1,19 +1,21 @@
 package com.blogspot.soyamr.notforgotagain.model.db
 
 import android.content.Context
-import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.blogspot.soyamr.notforgotagain.R
 import com.blogspot.soyamr.notforgotagain.model.db.tables.*
-import java.util.concurrent.Executors
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 @Database(
     entities = [Priority::class, Category::class, Note::class],
-    version = 8
+    version = 11
 )
 abstract class NotesDataBase : RoomDatabase() {
 
@@ -39,7 +41,7 @@ abstract class NotesDataBase : RoomDatabase() {
                     context.applicationContext,
                     NotesDataBase::class.java,
                     "notes_database"
-                ).allowMainThreadQueries().addCallback(dbCallbacks).build()
+                ).addCallback(dbCallbacks).build()
                 INSTANCE = instance
                 // return instance
                 instance
@@ -49,19 +51,31 @@ abstract class NotesDataBase : RoomDatabase() {
         private var dbCallbacks: Callback = object : Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-                Executors.newSingleThreadExecutor().execute {
-                    val priority1 =
-                        Priority(-1, context.resources.getString(R.string.priority), "-1")
-                    val priority2 =
-                        Priority(0, "1", "#E7004D")
-                    INSTANCE?.priorityDao()
-                        ?.insertPriority(listOf(priority1, priority2))
-                    Log.i("spinneri", "data")
+                println("hi databse")
+                GlobalScope.launch {
+                    withContext(Dispatchers.IO) {
+                        val priority1 =
+                            Priority(-1, context.resources.getString(R.string.priority), "-1")
+//                        val priority2 = Priority(2, "Important", "#E7004D")
+//                        val priority3 = Priority(3, "Very important", "#EF8D09")
+//                        val priority4 = Priority(4, "Not important", "#2E9C14")
+//                        val priority5 = Priority(5, "May be never", "#45D3EB")
+                        INSTANCE?.priorityDao()
+                            ?.insertPriority(
+                                listOf(
+                                    priority1/*,
+                                    priority2,
+                                    priority3,
+                                    priority4,
+                                    priority5*/
+                                )
+                            )
 
-                    val category =
-                        Category(-1, context.resources.getString(R.string.categoryTasks))
-                    INSTANCE?.categoryDao()
-                        ?.insertCategory(listOf(category))
+                        val category =
+                            Category(-1, context.resources.getString(R.string.categoryTasks))
+                        INSTANCE?.categoryDao()
+                            ?.insertCategory(listOf(category))
+                    }
                 }
             }
 

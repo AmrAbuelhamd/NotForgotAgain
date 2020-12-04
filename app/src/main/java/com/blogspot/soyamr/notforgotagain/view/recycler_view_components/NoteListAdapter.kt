@@ -103,4 +103,11 @@ class NoteAdapter(
         notifyDataSetChanged()
     }
 
+    fun removeItem(position: Int) {
+        if(position==0)
+            return
+        notes.removeAt(position)
+        notifyDataSetChanged()
+    }
+
 }

@@ -54,4 +54,11 @@ class SpinnerAdapter(
         spinner.setSelection(getPosition(items[0]))
     }
 
+    override fun getPosition(item: GeneralData?): Int {
+        dataValues.forEachIndexed() { index, element ->
+            if (element.getID() == item?.getID())
+                return index
+        }
+        return super.getPosition(item)
+    }
 }

@@ -1,5 +1,6 @@
 package com.blogspot.soyamr.notforgotagain.model.db.tables
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -8,6 +9,9 @@ import androidx.room.Query
 interface CategoryDao {
     @Query("SELECT * FROM category order by id")
     fun getAll(): List<Category>
+
+    @Query("SELECT * FROM category")
+    fun getLiveAll(): LiveData<List<Category>>
 
     @Query("SELECT * FROM category WHERE id = :id")
     fun getCategory(id: Long): Category

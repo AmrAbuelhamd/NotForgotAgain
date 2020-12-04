@@ -31,7 +31,7 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
         date.set(Calendar.MONTH, p2);
         date.set(Calendar.DAY_OF_MONTH, p3);
 
-        val format = SimpleDateFormat("yyyy-MM-dd")
+        val format = SimpleDateFormat("dd.MM.yyyy")
 
         setFragmentResult(
             AddNoteFragment.REQUEST_DATE_KEY,

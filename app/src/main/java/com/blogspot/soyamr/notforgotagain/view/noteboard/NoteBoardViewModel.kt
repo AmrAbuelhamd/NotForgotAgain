@@ -1,6 +1,5 @@
 package com.blogspot.soyamr.notforgotagain.view.noteboard
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.blogspot.soyamr.notforgotagain.domain.NoteBoss
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
@@ -19,14 +18,11 @@ class NoteBoardViewModel(private val repository: NoteRepository) : ViewModel() {
     private val _notes: MutableLiveData<List<NoteBoss>> = MutableLiveData()
     val notes: LiveData<List<NoteBoss>> = _notes
     val isLoading: LiveData<Boolean> = _isLoading
-
+    private val _errorMessageSnakeBar = MutableLiveData("")
+    val errorMessageSnakeBar: LiveData<String> = _errorMessageSnakeBar
 
     init {
         updateDataBase()
-        repository.getLiveNotes().observeForever(Observer { myNotes ->
-            getNotes()
-        })
-
     }
 
     fun logOutUser() {
@@ -45,8 +41,7 @@ class NoteBoardViewModel(private val repository: NoteRepository) : ViewModel() {
                     _notes.value = result.data
                 }
                 else -> {
-                    println("AAmr problem getting notes")
-                    //show error}
+                    _errorMessageSnakeBar.value = (result as Result.Error).exception.message
                 }
             }
             _isLoading.value = false
@@ -61,10 +56,10 @@ class NoteBoardViewModel(private val repository: NoteRepository) : ViewModel() {
                     println("$tag fetched data")
                 }
                 else -> {
-                    Log.i(tag, result.toString())
-                    //show error}
+                    _errorMessageSnakeBar.value = (result as Result.Error).exception.message
                 }
             }
+            getNotes()
             _isLoading.value = false
         }
     }
@@ -77,7 +72,27 @@ class NoteBoardViewModel(private val repository: NoteRepository) : ViewModel() {
                     println("$tag fetched data")
                 }
                 else -> {
-                    println("$tag error on set check")
+                    _errorMessageSnakeBar.value = (result as Result.Error).exception.message
+                }
+            }
+            getNotes()
+            _isLoading.value = false
+        }
+    }
+
+    fun refresh() {
+        updateDataBase()
+    }
+
+    fun removeItem(id: Long) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            when (val result = repository.deleteNote(id)) {
+                is Result.Success<String> -> {
+                    println("$tag fetched data")
+                }
+                else -> {
+                    _errorMessageSnakeBar.value = (result as Result.Error).exception.message
                     //show error}
                 }
             }

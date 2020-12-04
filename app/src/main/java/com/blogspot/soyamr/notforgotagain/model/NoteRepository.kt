@@ -4,19 +4,21 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.util.Log
 import com.blogspot.soyamr.notforgotagain.R
 import com.blogspot.soyamr.notforgotagain.domain.NoteBoss
 import com.blogspot.soyamr.notforgotagain.model.db.NotesDataBase
-import com.blogspot.soyamr.notforgotagain.model.db.tables.*
+import com.blogspot.soyamr.notforgotagain.model.db.tables.CategoryDao
+import com.blogspot.soyamr.notforgotagain.model.db.tables.Note
+import com.blogspot.soyamr.notforgotagain.model.db.tables.NoteDao
+import com.blogspot.soyamr.notforgotagain.model.db.tables.PriorityDao
 import com.blogspot.soyamr.notforgotagain.model.net.Network
 import com.blogspot.soyamr.notforgotagain.model.net.TaskApiService
-import com.blogspot.soyamr.notforgotagain.model.net.pojo.LoginUser
-import com.blogspot.soyamr.notforgotagain.model.net.pojo.Task
+import com.blogspot.soyamr.notforgotagain.model.net.pojo.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import com.blogspot.soyamr.notforgotagain.model.db.tables.Category as dbCategory
+import com.blogspot.soyamr.notforgotagain.model.db.tables.Priority as dbPriority
+import com.blogspot.soyamr.notforgotagain.model.net.pojo.Category as NetCategory
 
 sealed class Result<out R> {
     data class Success<out T>(val data: T) : Result<T>()
@@ -56,31 +58,6 @@ object NoteRepository {
     suspend fun getCategories() =
         withContext(Dispatchers.IO) { categoryDao.getAll() }
 
-    //    fun addNewCategory( newCategory: String?) {
-//        val category = Category(newCategory, categoryDao.getBiggestId() + 1)
-//        categoryDao.insertCategory(category)
-//    }
-
-    fun addNewNote(
-        currentUserId: Long?,
-        categorySpinnerTextId: Long,
-        prioritySpinnerTextId: Long,
-        dateText: String,
-        headerTextLayout: String,
-        descriptionTextLayout: String
-    ): Note {
-
-        val note = Note(
-            (++catNo).toLong(),
-            headerTextLayout, descriptionTextLayout, false, 5245, 45564,
-            categorySpinnerTextId, prioritySpinnerTextId
-        )
-
-        noteDao.insertNote(listOf(note))
-
-        return note
-
-    }
 
     //first: get data from database, and make a ready to use list of noteBoss for recyclerview
     suspend fun getNotes(): Result<ArrayList<NoteBoss>> {
@@ -98,7 +75,7 @@ object NoteRepository {
                 }
                 Result.Success(notes)
             } catch (e: Exception) {
-                Result.Error(Exception("AAmr Can't fetch data from local cash"))
+                Result.Error(Exception("Fatal Exception Can't fetch data from local cash \n{${e.message}}"))
             }
         }
     }
@@ -112,15 +89,15 @@ object NoteRepository {
         if (capabilities != null) {
             when {
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
-                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+//                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
                     return true
                 }
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
-                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+//                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
                     return true
                 }
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
-                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+//                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
                     return true
                 }
             }
@@ -132,92 +109,121 @@ object NoteRepository {
     //1- check if there is internet or no -> IF no THEN return no internet mistake, IF yes THEN:
     //2- get un submitted notes and send them to api IF error THEN  return and show error "can't update remove server"
     // IF yes THEN get notes from server and store them to database, and return success
-    suspend fun updateDataBase(): Result<String> {
-        return withContext(Dispatchers.IO) {
+    suspend fun updateDataBase(): Result<String> =
+        withContext(Dispatchers.IO) {
             if (isOnline()) {
                 //get un Submitted notes and send them to api
-//                try {
-//                    val unSubmittedNotes = noteDao.getUnSubmittedNotes()
-//                    val unSubmittedCats = categoryDao.getUnSubmittedCategories()
-//                    if (unSubmittedCats.isNotEmpty() || unSubmittedNotes.isNotEmpty()) {
-//                    }
-//                    //todo create list of notes for server
-//                    //todo send them to api
-//
-//                } catch (e: Exception) {
-//                    println("$tag ->> $e")
-//                    Result.Error(Exception("can't update remove serve"))
-//                }
+                try {
+                    val unSubmittedNotes = noteDao.getUnSubmittedNotes()
+                    //val unSubmittedCats = categoryDao.getUnSubmittedCategories()
+                    if (/*unSubmittedCats.isNotEmpty() ||*/ unSubmittedNotes.isNotEmpty()) {
+
+//                        unSubmittedCats.forEach {
+//                            val serverCategory = apiService.addNewCategory(it.toNetPojo())
+//                            categoryDao.delete(it)
+//                            categoryDao.insertCategory(serverCategory.toDataBaseCategory())
+//                        }
+
+                        unSubmittedNotes.forEach {
+                            val note = apiService.addNewTask(it.toNetPojoTask())
+                            noteDao.delete(it)
+                            noteDao.insertNote(listOf(note.toDataBaseNote()))
+                        }
+                    }
+
+                } catch (e: Exception) {
+                    println("$tag ->> $e")
+                    return@withContext Result.Error(Exception("can't update remote server \n{${e.message.toString()}}"))
+                }
 
                 //get data from api and send them to database [let's say there will be no problem from database]
                 try {
                     val updatedTasks = apiService.getTasks()
-//                    println("AAmr updatedTasks: $updatedTasks")
-                    val cats = updatedTasks.map { it.toDataBaseCategory() }
-                    val priority = updatedTasks.map { it.toDataBasePriority() }
+                    val updatedCats = apiService.getCategories()
+                    val updatedPriorities = apiService.getPriorities()
+
+                    val cats = updatedCats.map { it.toDataBaseCategory() }
+                    val priority = updatedPriorities.map { it.toDataBasePriority() }
                     val notes = updatedTasks.map { it.toDataBaseNote() }
                     cleanDataBase()
                     categoryDao.insertCategory(cats)
                     priorityDao.insertPriority(priority)
                     noteDao.insertNote(notes)
-                    Result.Success("everything is good")
+                    return@withContext Result.Success("everything is good")
                 } catch (e: Exception) {
 //                    println("AAmr $tag ->> $e")
-                    Result.Error(Exception("can't fetch data from server"))
+                    return@withContext Result.Error(Exception("can't fetch data from server ${e.message.toString()}"))
                 }
             } else {
-                Result.Error(Exception("no internet"))
+                return@withContext Result.Error(Exception("no internet"))
             }
         }
-    }
 
     private fun cleanDataBase() {
         noteDao.deleteAll()
         categoryDao.deleteAll()
         priorityDao.deleteAll()
+        // context.deleteDatabase("notes_database")
     }
 
-    fun getUnSubmittedNotes() = noteDao.getUnSubmittedNotes()
 
-    fun getnote(currentNote: Long?): Note {
-        return noteDao.getNote(currentNote!!)
+    suspend fun getCategory(cid: Long): dbCategory = withContext(Dispatchers.IO) {
+        categoryDao.getCategory(cid)
     }
 
-    fun getCategory(cid: Long): Category {
-        return categoryDao.getCategory(cid)
+    suspend fun getPriority(pid: Long): dbPriority = withContext(Dispatchers.IO) {
+        priorityDao.getPriority(pid)
     }
 
-    suspend fun getFullNoteDataRelatedToCategory(categoryId: Long) =
-        noteDao.getFullNoteDataRelatedToCategory(categoryId)
-
-    fun getFullNoteData(currentNoteId: Long) =
+    suspend fun getFullNoteData(currentNoteId: Long) = withContext(Dispatchers.IO) {
         noteDao.getFullNoteData(currentNoteId)
-
-    var catNo: Int = 1;
-    fun addNewCategory(newCategory: String): Category {
-        val category = Category((++catNo).toLong(), newCategory)
-        categoryDao.insertCategory(listOf(category))
-        return category;
     }
 
-    suspend fun logIn(loginUser: LoginUser): Boolean {
-
-        val userToken =
-            apiService.login(loginUser)
-
-        if (userToken.apiToken.isNotEmpty()) {
-            Network.updateToken(userToken.apiToken)
-            with(sharedPref.edit()) {
-                putString(context.resources.getString(R.string.tokenKey), userToken.apiToken)
-                apply()
+    suspend fun addNewCategory(newCategoryString: String): Result<dbCategory> =
+        withContext(Dispatchers.IO) {
+            if (isOnline()) {
+                val newCategory = NewCategory(newCategoryString)
+                val result: NetCategory
+                try {
+                    result = apiService.addNewCategory(newCategory)
+                } catch (e: Exception) {
+                    return@withContext Result.Error(Exception("network problem, ${e.message.toString()}"))
+                }
+                val cat = result.toDataBaseCategory()
+                categoryDao.insertCategory(listOf(cat))
+                return@withContext Result.Success(cat)
+            } else {
+                return@withContext Result.Error(Exception("you are offline changes couldn't be saved"))
             }
-        } else {
-            return false
         }
-        return true
-    }
 
-    fun doWeHaveToken(): Boolean {
+    suspend fun logIn(loginUser: LoginUser): Result<Boolean> =
+        withContext(Dispatchers.IO) {
+            if (isOnline()) {
+                try {
+                    val userToken = apiService.login(loginUser)
+                    if (userToken.apiToken.isNotEmpty()) {
+                        Network.updateToken(userToken.apiToken)
+                        with(sharedPref.edit()) {
+                            putString(
+                                context.resources.getString(R.string.tokenKey),
+                                userToken.apiToken
+                            )
+                            apply()
+                        }
+                        return@withContext Result.Success(true)
+                    } else {
+                        return@withContext Result.Error(java.lang.Exception("unknown error"))
+                    }
+                } catch (e: java.lang.Exception) {
+                    return@withContext Result.Error(Exception("wrong email or password \n{${e.message}}"))
+                }
+            } else {
+                return@withContext Result.Error(java.lang.Exception("you are offline"))
+            }
+        }
+
+    suspend fun doWeHaveToken(): Boolean = withContext(Dispatchers.IO) {
         val defaultToken = context.resources.getString(R.string.defaultToken)
         val storedToken = sharedPref.getString(
             context.resources.getString(R.string.tokenKey),
@@ -227,49 +233,12 @@ object NoteRepository {
         if (storedToken != null && result)
             Network.updateToken(storedToken)
 
-        return result
-    }
-
-    fun getCategoriesNet(): List<com.blogspot.soyamr.notforgotagain.model.net.pojo.Category>? {
-        var categories1: List<com.blogspot.soyamr.notforgotagain.model.net.pojo.Category>? =
-            null
-        GlobalScope.launch(Dispatchers.Main) {
-            val categories = withContext(Dispatchers.IO) {
-                try {
-                    apiService.getCategories()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.e("error cat ", e.toString())
-                    null
-                }
-            } ?: return@launch
-            Log.e("categoriess ", " " + categories.toString())
-            categories1 = categories;
-        }
-        return categories1;
-
-    }
-
-    fun getNotesNet(): List<Task>? {
-        var nots1: List<com.blogspot.soyamr.notforgotagain.model.net.pojo.Task>? = null
-        GlobalScope.launch(Dispatchers.Main) {
-            val nots = withContext(Dispatchers.IO) {
-                try {
-                    apiService.getTasks()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.e("error tasks ", e.toString())
-                    null
-                }
-            } ?: return@launch
-            Log.e("taskss ", " " + nots.toString())
-            nots1 = nots;
-        }
-        return nots1;
+        return@withContext result
     }
 
     suspend fun logOutUser() =
         withContext(Dispatchers.IO) {
+            cleanDataBase()
             context.deleteDatabase("notes_database")
             val defaultToken = context.resources.getString(R.string.defaultToken)
             with(sharedPref.edit()) {
@@ -279,8 +248,9 @@ object NoteRepository {
         }
 
 
-    fun getLiveNotes() =
+    suspend fun getLiveNotes() = withContext(Dispatchers.IO) {
         noteDao.getAll()
+    }
 
     //in case user is offline change locally and say nothing.
     //first check internet YES modify there then locally if no show error
@@ -300,7 +270,7 @@ object NoteRepository {
                 try {
                     result = apiService.updateTask(updatedTask, noteId)
                 } catch (e: Exception) {
-                    return@withContext Result.Error(Exception("network problem, $e"))
+                    return@withContext Result.Error(Exception("network problem, {${e.message.toString()}}"))
                 }
                 val cat = result.toDataBaseCategory()
                 if (!categoryDao.isRowExist(cat.id))
@@ -313,6 +283,118 @@ object NoteRepository {
                 return@withContext Result.Success("everything is good")
             } else {
                 return@withContext Result.Error(Exception("you are offline changes couldn't be saved"))
+            }
+        }
+
+    suspend fun updateNote(
+        noteId: Long,
+        title: String,
+        desc: String,
+        deadline: Long,
+        categorySpinnerId: Long,
+        prioritySpinnerId: Long
+    ): Result<String> = withContext(Dispatchers.IO) {
+        if (isOnline()) {
+            val note = noteDao.getNote(noteId)
+            val updatedTask = note.toUpdatedTask(
+                title,
+                desc,
+                deadline = deadline,
+                parentCategoryId = categorySpinnerId,
+                parentPriorityId = prioritySpinnerId
+            )
+            val result: Task
+            try {
+                result = apiService.updateTask(updatedTask, noteId)
+            } catch (e: Exception) {
+                return@withContext Result.Error(Exception("network problem, ${e.message.toString()}"))
+            }
+            noteDao.delete(note)
+            noteDao.insertNote(listOf(result.toDataBaseNote()))
+            return@withContext Result.Success("updates saved to api")
+        } else {
+            return@withContext Result.Error(Exception("you are offline changes couldn't be saved"))
+        }
+    }
+
+    suspend fun addNewNote(
+        title: String,
+        desc: String,
+        deadline: Long,
+        categorySpinnerId: Long,
+        prioritySpinnerId: Long,
+        created: Long
+    ): Result<String> = withContext(Dispatchers.IO) {
+        if (isOnline()) {
+            val task = NewTask(title, desc, 0, deadline, categorySpinnerId, prioritySpinnerId)
+            val result: Task
+            try {
+                println("task: ${task.toString()}")
+                result = apiService.addNewTask(task)
+            } catch (e: Exception) {
+                return@withContext Result.Error(Exception("network problem, ${e.message.toString()}"))
+            }
+            noteDao.insertNote(listOf(result.toDataBaseNote(true)))
+            return@withContext Result.Success("saved to api")
+        } else {
+            noteDao.insertNote(
+                listOf(
+                    Note(
+                        getValidNoteId(), title, desc, false, deadline,
+                        created, categorySpinnerId, prioritySpinnerId, false
+                    )
+                )
+            )
+            return@withContext Result.Success("Saved Locally")
+        }
+    }
+
+    fun getValidNoteId(): Long =
+        noteDao.getBiggestId() + 1L
+
+    suspend fun signUp(name: String, email: String, password: String): Result<String> =
+        withContext(Dispatchers.IO) {
+            if (isOnline()) {
+                val newUser = NewUser(email, name, password)
+                val result: User
+                try {
+                    result = apiService.registerUser(newUser)
+                    if (result.apiToken.isNotEmpty()) {
+                        Network.updateToken(result.apiToken)
+                        with(sharedPref.edit()) {
+                            putString(
+                                context.resources.getString(R.string.tokenKey),
+                                result.apiToken
+                            )
+                            apply()
+                        }
+                    }
+                } catch (e: Exception) {
+                    return@withContext Result.Error(Exception("network problem, {$e}"))
+                }
+                //Network.updateToken(result.apiToken)
+                return@withContext Result.Success("signed up successfully")
+            } else {
+                return@withContext Result.Error(Exception("you are offline"))
+            }
+        }
+
+    suspend fun getLiveCats() = withContext(Dispatchers.IO) {
+        categoryDao.getLiveAll()
+    }
+
+    suspend fun deleteNote(id: Long): Result<String> =
+        withContext(Dispatchers.IO) {
+            if (isOnline()) {
+                try {
+                    apiService.deleteNote(id.toInt())
+                    noteDao.deleteNote(id)
+                } catch (e: Exception) {
+                    return@withContext Result.Error(Exception("network problem, $e"))
+                }
+                return@withContext Result.Success("note deleted successfully")
+            } else {
+                return@withContext Result.Error(Exception("you are offline changes not saved"))
             }
         }
 }

@@ -10,13 +10,13 @@ data class Task(
     val id: Long,
     val title: String,
     val description: String?,
-    val done: Int,
+    val done: Int = 0,
     val deadline: Long?,
     val category: Category,
     val priority: Priority,
     val created: Long?
 ) {
-    fun toDataBaseNote() =
+    fun toDataBaseNote(isSavedToApi: Boolean = true) =
         dbNote(
             id,
             title,
@@ -25,7 +25,8 @@ data class Task(
             deadline,
             created,
             category.id,
-            priority.id
+            priority.id,
+            isSavedToApi
         )
 
     fun toDataBaseCategory() = dbCategory(category.id, category.name)

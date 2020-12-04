@@ -48,4 +48,7 @@ interface NoteDao {
 
     @Query("DELETE FROM Note")
     fun deleteAll()
+
+    @Query("select max(id) from note")
+    fun getBiggestId():Long
 }

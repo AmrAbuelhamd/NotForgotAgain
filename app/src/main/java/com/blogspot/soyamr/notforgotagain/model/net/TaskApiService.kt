@@ -15,8 +15,24 @@ interface TaskApiService {
     @GET("categories")
     suspend fun getCategories(): List<Category>
 
+    @GET("priorities")
+    suspend fun getPriorities(): List<Priority>
+
     @PATCH("tasks/{id}")
     suspend fun updateTask(@Body updatedTask: UpdatedTask, @Path("id") id: Long): Task
+
+    @POST("categories")
+    suspend fun addNewCategory(@Body newCategory: NewCategory): Category
+
+    @POST("tasks")
+    suspend fun addNewTask(@Body newTask: NewTask): Task
+
+    @POST("register")
+    @Headers("No-Authentication: true")
+    suspend fun registerUser(@Body newUser: NewUser): User
+
+    @DELETE("tasks/{id}")
+    suspend fun deleteNote(@Path("id") id: Int):DeletedTaskResponse
 
 
 }
