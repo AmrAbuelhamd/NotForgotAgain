@@ -1,10 +1,9 @@
 package com.blogspot.soyamr.notforgotagain.view.util
 
-import android.view.View
 import androidx.databinding.BindingAdapter
 import com.google.android.material.textfield.TextInputLayout
 
-
+//Lidia DataBinding using the adapter to show the errors
 @BindingAdapter("app:errorText")
 fun setErrorText(view: TextInputLayout, errorMessage: String) {
     if (errorMessage.isEmpty())

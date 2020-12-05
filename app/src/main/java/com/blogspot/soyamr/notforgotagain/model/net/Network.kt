@@ -12,8 +12,8 @@ object Network {
     private val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder().addInterceptor { chain ->
             var request = chain.request()
-            if (request.header("No-Authentication") == null) {
-                if (token.isNotEmpty()) {
+            if (request.header("No-Authentication") == null) {//lidia interceptor make use of it, when find this header
+                if (token.isNotEmpty()) {                            // this means that there's no authentication needed.
                     val finalToken = "Bearer $token"
                     request = request.newBuilder()
                         .addHeader("Authorization", finalToken)

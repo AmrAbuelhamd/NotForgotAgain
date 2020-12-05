@@ -9,7 +9,8 @@ import android.widget.Spinner
 import android.widget.TextView
 import com.blogspot.soyamr.notforgotagain.domain.GeneralData
 
-
+//lidia spinner adapter that accepts interface which can accept priority and category class type
+// it's used to populate both spinners and to add the first element as hint
 class SpinnerAdapter(
     context: Context,
     textViewResourceId: Int,

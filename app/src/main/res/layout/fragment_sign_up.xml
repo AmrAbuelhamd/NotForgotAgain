@@ -20,7 +20,7 @@
         <include
             android:id="@+id/include2"
             layout="@layout/toolbar_application" />
-
+<!--Lidia DataBinding directly with viewmodel without writing anything at fragment-->
         <Button
             android:id="@+id/signUpButtonView"
             android:layout_width="0dp"
@@ -154,6 +154,7 @@
             app:layout_constraintStart_toEndOf="@+id/textView2"
             app:layout_constraintTop_toTopOf="@+id/textView2" />
 
+<!--        lidia databinding directly updating state of fragment and using databinding expressions -->
         <include
             android:id="@+id/here_must_be_id_or_no_databinding"
             android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}"

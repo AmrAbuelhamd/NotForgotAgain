@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 //    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
 //        SignUpViewModel(repository) as T
 //}
-
+//lidia Dagger Hilt injecting the repository in viewmodel
 class SignUpViewModel @ViewModelInject constructor(val repository: NoteRepository) : ViewModel() {
     private val tag = "SignUpViewModel"
     private val _isLoading = MutableLiveData(false)
@@ -49,6 +49,7 @@ class SignUpViewModel @ViewModelInject constructor(val repository: NoteRepositor
 
 
     fun signUp() {
+        //lidia viewmodel notice the use of coroutines
         viewModelScope.launch {
             _isLoading.value = true
             if (isValidInput()) {

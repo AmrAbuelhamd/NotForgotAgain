@@ -82,7 +82,7 @@ class SignInViewModel @ViewModelInject constructor(private val repository: NoteR
         if (!passwordText.value.isValidPassword()) {
             _passwordErrorMessage.value =
                 "Invalid Password, password should contain {digit, lower case, upper case, no whitespace, 4 digits at least}"
-            //result = false
+            result = false
         } else {
             _passwordErrorMessage.value = ""
         }

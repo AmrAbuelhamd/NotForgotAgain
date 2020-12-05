@@ -16,14 +16,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.blogspot.soyamr.notforgotagain.R
 import com.blogspot.soyamr.notforgotagain.databinding.FragmentSignInBinding
-import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_sign_in.*
 
 @AndroidEntryPoint
 class SignInFragment : Fragment() {
 
-    private val repository: NoteRepository by lazy { NoteRepository(requireContext()) }
+//    private val repository: NoteRepository by lazy { NoteRepository(requireContext()) }
     private val viewModel: SignInViewModel by viewModels() // { SignInViewModelFactory(repository) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setUpViewModelCalls()

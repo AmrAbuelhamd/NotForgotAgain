@@ -53,11 +53,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!--       <include
+               <include
                    android:id="@+id/here_must_be_id_or_no_databinding"
                    layout="@layout/loading_state"
                    android:visibility="@{viewModel.isLoading ? View.VISIBLE : View.GONE}" />
-       -->
+
         <ImageView
             android:id="@+id/emptyStateImage"
             android:layout_width="wrap_content"

@@ -20,11 +20,13 @@ import com.blogspot.soyamr.notforgotagain.model.db.tables.Category as dbCategory
 import com.blogspot.soyamr.notforgotagain.model.db.tables.Priority as dbPriority
 import com.blogspot.soyamr.notforgotagain.model.net.pojo.Category as NetCategory
 
+
+//lidia perfect class used in goolge samples used to get the results
 sealed class Result<out R> {
     data class Success<out T>(val data: T) : Result<T>()
     data class Error(val exception: Exception) : Result<Nothing>()
 }
-
+//lidia dagger hilt injecting application context then using the repo itself everywhere needed.
 @Singleton
 class NoteRepository @Inject constructor(@ApplicationContext val context: Context) {
 
