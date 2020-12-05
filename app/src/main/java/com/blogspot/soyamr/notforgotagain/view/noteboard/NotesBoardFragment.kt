@@ -19,9 +19,10 @@ import com.blogspot.soyamr.notforgotagain.domain.NoteBoss
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import com.blogspot.soyamr.notforgotagain.view.recycler_view_components.NoteAdapter
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_notes_board.*
 
-
+@AndroidEntryPoint
 class NotesBoardFragment : Fragment() {
     var notes = ArrayList<NoteBoss>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,7 +53,7 @@ class NotesBoardFragment : Fragment() {
     }
 
     private val repository: NoteRepository by lazy { NoteRepository(requireContext()) }
-    private val viewModel: NoteBoardViewModel by viewModels { NoteBoardViewModelFactory(repository) }
+    private val viewModel: NoteBoardViewModel by viewModels() //{ NoteBoardViewModelFactory(repository) }
 
     private fun setUpToolBar(view: View) {
         val toolBar = view.findViewById<Toolbar>(R.id.my_toolbar)

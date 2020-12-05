@@ -1,18 +1,22 @@
 package com.blogspot.soyamr.notforgotagain.view.noteboard
 
-import androidx.lifecycle.*
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.blogspot.soyamr.notforgotagain.domain.NoteBoss
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import com.blogspot.soyamr.notforgotagain.model.Result
 import kotlinx.coroutines.launch
 
-class NoteBoardViewModelFactory(private val repository: NoteRepository) :
-    ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-        NoteBoardViewModel(repository) as T
-}
+//class NoteBoardViewModelFactory(private val repository: NoteRepository) :
+//    ViewModelProvider.NewInstanceFactory() {
+//    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
+//        NoteBoardViewModel(repository) as T
+//}
 
-class NoteBoardViewModel(private val repository: NoteRepository) : ViewModel() {
+class NoteBoardViewModel @ViewModelInject constructor(private val repository: NoteRepository) : ViewModel() {
     private val tag = "NoteBoardViewModel"
     private val _isLoading = MutableLiveData(false)
     private val _notes: MutableLiveData<List<NoteBoss>> = MutableLiveData()

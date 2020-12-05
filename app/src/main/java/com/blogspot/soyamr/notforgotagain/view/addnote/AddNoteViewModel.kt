@@ -76,8 +76,13 @@ class AddNoteViewModel(private val repository: NoteRepository, private val noteI
                 descText.value = note.nDescription!!
                 dateText.value = makeDataString(note.nDeadline)
             }
-            getCats()
-            getPriority()
+            try {
+                getCats()
+                getPriority()
+            }
+            catch (e:java.lang.Exception){
+                println("$tag ${e.message.toString()}")
+            }
         }
     }
 

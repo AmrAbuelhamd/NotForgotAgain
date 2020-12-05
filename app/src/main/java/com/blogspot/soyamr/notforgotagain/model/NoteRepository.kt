@@ -11,8 +11,11 @@ import com.blogspot.soyamr.notforgotagain.model.db.tables.*
 import com.blogspot.soyamr.notforgotagain.model.net.Network
 import com.blogspot.soyamr.notforgotagain.model.net.TaskApiService
 import com.blogspot.soyamr.notforgotagain.model.net.pojo.*
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 import com.blogspot.soyamr.notforgotagain.model.db.tables.Category as dbCategory
 import com.blogspot.soyamr.notforgotagain.model.db.tables.Priority as dbPriority
 import com.blogspot.soyamr.notforgotagain.model.net.pojo.Category as NetCategory
@@ -22,19 +25,18 @@ sealed class Result<out R> {
     data class Error(val exception: Exception) : Result<Nothing>()
 }
 
-object NoteRepository {
+@Singleton
+class NoteRepository @Inject constructor(@ApplicationContext val context: Context) {
 
     private val tag = "NoteRepository"
-    private lateinit var noteDao: NoteDao
-    private lateinit var categoryDao: CategoryDao
-    private lateinit var priorityDao: PriorityDao
-    private lateinit var deletedNotesIdsDao: DeletedNotesIdsDao
-    private lateinit var apiService: TaskApiService
-    private lateinit var sharedPref: SharedPreferences
-    private lateinit var context: Context
+    private val noteDao: NoteDao
+    private val categoryDao: CategoryDao
+    private val priorityDao: PriorityDao
+    private val deletedNotesIdsDao: DeletedNotesIdsDao
+    private val apiService: TaskApiService
+    private val sharedPref: SharedPreferences
 
-    operator fun invoke(context: Context): NoteRepository {
-        this.context = context
+    init {
         val db = NotesDataBase.getDatabase(context)
         apiService = Network.retrofit
 
@@ -47,8 +49,6 @@ object NoteRepository {
             context.resources.getString(R.string.preference_file_key),
             Context.MODE_PRIVATE
         )
-
-        return this
     }
 
     suspend fun getPriorities() =
@@ -251,7 +251,7 @@ object NoteRepository {
     suspend fun logOutUser() =
         withContext(Dispatchers.IO) {
             cleanDataBase()
-            context.deleteDatabase("notes_database")
+//            context.deleteDatabase("notes_database")
             val defaultToken = context.resources.getString(R.string.defaultToken)
             with(sharedPref.edit()) {
                 putString(context.resources.getString(R.string.tokenKey), defaultToken)

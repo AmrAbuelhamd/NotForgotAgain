@@ -15,14 +15,14 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.blogspot.soyamr.notforgotagain.R
 import com.blogspot.soyamr.notforgotagain.databinding.FragmentSignUpBinding
-import com.blogspot.soyamr.notforgotagain.model.NoteRepository
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 
-
+@AndroidEntryPoint
 class SignUpFragment : Fragment() {
 
-    private val repository: NoteRepository by lazy { NoteRepository(requireContext()) }
-    private val viewModel: SignUpViewModel by viewModels { SignUpViewModelFactory(repository) }
+//    private val repository: NoteRepository by lazy { NoteRepository(requireContext()) }
+    private val viewModel: SignUpViewModel by viewModels()// { SignUpViewModelFactory(repository) }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setListeners()
         setActionBar(view)

@@ -1,6 +1,10 @@
 package com.blogspot.soyamr.notforgotagain.view.signup
 
-import androidx.lifecycle.*
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import com.blogspot.soyamr.notforgotagain.model.Result
 import com.blogspot.soyamr.notforgotagain.view.SingleLiveEvent
@@ -8,15 +12,15 @@ import com.blogspot.soyamr.notforgotagain.view.util.isValidEmail
 import com.blogspot.soyamr.notforgotagain.view.util.isValidPassword
 import kotlinx.coroutines.launch
 
-class SignUpViewModelFactory(
-    private val repository: NoteRepository
-) :
-    ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
-        SignUpViewModel(repository) as T
-}
+//class SignUpViewModelFactory(
+//    private val repository: NoteRepository
+//) :
+//    ViewModelProvider.NewInstanceFactory() {
+//    override fun <T : ViewModel?> create(modelClass: Class<T>): T =
+//        SignUpViewModel(repository) as T
+//}
 
-class SignUpViewModel(val repository: NoteRepository) : ViewModel() {
+class SignUpViewModel @ViewModelInject constructor(val repository: NoteRepository) : ViewModel() {
     private val tag = "SignUpViewModel"
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> = _isLoading

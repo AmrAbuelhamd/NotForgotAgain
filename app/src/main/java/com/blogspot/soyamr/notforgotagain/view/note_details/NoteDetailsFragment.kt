@@ -22,8 +22,12 @@ class NoteDetailsFragment : Fragment() {
 
 
     private val repository: NoteRepository by lazy { NoteRepository(requireContext()) }
-    private val viewModel: NoteDetailsViewModel by viewModels { NoteDetailsViewModelFactory(repository,currentNote!!) }
-
+    private val viewModel: NoteDetailsViewModel by viewModels {
+        NoteDetailsViewModelFactory(
+            repository,
+            currentNote!!
+        )
+    }
 
 
     var currentNote: Long? = 0L
@@ -55,6 +59,7 @@ class NoteDetailsFragment : Fragment() {
             )
         )
     }
+
     lateinit var binding: FragmentNoteDetailsBinding
 
     override fun onCreateView(
@@ -62,7 +67,8 @@ class NoteDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_note_details, container, false)
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_note_details, container, false)
         return binding.root
 
     }

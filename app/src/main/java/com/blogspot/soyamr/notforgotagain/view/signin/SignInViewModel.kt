@@ -1,6 +1,10 @@
 package com.blogspot.soyamr.notforgotagain.view.signin
 
-import androidx.lifecycle.*
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.blogspot.soyamr.notforgotagain.model.NoteRepository
 import com.blogspot.soyamr.notforgotagain.model.Result
 import com.blogspot.soyamr.notforgotagain.model.net.pojo.LoginUser
@@ -11,12 +15,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 // Override ViewModelProvider.NewInstanceFactory to create the ViewModel (VM).
-class SignInViewModelFactory(private val repository: NoteRepository) :
-    ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T = SignInViewModel(repository) as T
-}
+//class SignInViewModelFactory(private val repository: NoteRepository) :
+//    ViewModelProvider.NewInstanceFactory() {
+//    override fun <T : ViewModel?> create(modelClass: Class<T>): T = SignInViewModel(repository) as T
+//}
 
-class SignInViewModel(private val repository: NoteRepository) : ViewModel() {
+class SignInViewModel @ViewModelInject constructor(private val repository: NoteRepository) : ViewModel() {
 
     private val _passwordErrorMessage = MutableLiveData("")
     private val _emailErrorMessage = MutableLiveData("")
