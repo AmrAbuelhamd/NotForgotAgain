@@ -30,7 +30,7 @@ A note Taking Application.
 
 ## Installation
 
-[link to the apk file](https://github.com/AmrAbuelhamd/LifeSimulationAndroidGame/blob/master/app/release/app-release.apk)
+[link to the apk file](https://github.com/AmrAbuelhamd/NotForgotAgain/blob/master/app/release/app-release.apk)
 
 
 ## tech used
