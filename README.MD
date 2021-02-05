@@ -20,18 +20,27 @@ A note Taking Application.
 
 **for the full demo video [click here for youtube video](https://youtu.be/v7HaQTSI7wE)**
 
-## ScreenShots
+## Screenshots
 
+<img src="https://github.com/AmrAbuelhamd/NotForgotAgain/blob/master/screenshots/1.jpg" width=200 height=400/>
+<img src="https://github.com/AmrAbuelhamd/NotForgotAgain/blob/master/screenshots/2.jpg" width=200 height=400/>
+<img src="https://github.com/AmrAbuelhamd/NotForgotAgain/blob/master/screenshots/3.jpg" width=200 height=400/>
+<img src="https://github.com/AmrAbuelhamd/NotForgotAgain/blob/master/screenshots/4.jpg" width=200 height=400/>
 
 ## Installation
+
 [link to the apk file](https://github.com/AmrAbuelhamd/LifeSimulationAndroidGame/blob/master/app/release/app-release.apk)
 
 
 ## tech used
-•	Used Kotlin and all the possible new android SDK components such **nav graph** and other UI components.
-•	Used **Room persistence library** for cashing user data in case there’s no internet.
-•	Followed **MVVM** app architecture.
-•	Used **Dependency injection (Hilt library)** and **Retrofit 2** library for REST API calls along with **Interceptor** for user token string.
+
+*	Used Kotlin and all the possible new android SDK components such **nav graph** and other UI components.
+
+*	Used **Room persistence library** for cashing user data in case there’s no internet.
+
+*	Followed **MVVM** app architecture.
+
+*	Used **Dependency injection (Hilt library)** and **Retrofit 2** library for REST API calls along with **Interceptor** for user token string.
 
 ## Credits
 * The App idea and design was part mobile subject which led by _Lidia Ivanova_ at the first semester of second year of the university.
