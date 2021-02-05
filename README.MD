@@ -10,13 +10,13 @@ A note Taking Application.
 
 * Users can take notes online or offline.
 
-* if internet is available, then notes are saved directly to API, if no internet is available then notes are saved locally, and will be saved to API when the internet is available.
+* If the internet is available, then notes are saved directly to API, if no internet is available then notes are saved locally, and will be saved to API when the internet is available.
 
-* User can edit notes online and offline.
+* Users can edit notes online and offline.
 
-* User can swipe to delete
+* Users can swipe to delete
 
-* User can pull to refresh note list
+* Users can pull to refresh note list
 
 **for the full demo video [click here for youtube video](https://youtu.be/v7HaQTSI7wE)**
 
@@ -44,4 +44,4 @@ A note Taking Application.
 *	Used **Dependency injection (Hilt library)** and **Retrofit 2** library for REST API calls along with **Interceptor** for user token string.
 
 ## Credits
-* The App idea and design was part of Mobile subject which led by _Lidia Ivanova_ at the first semester of second year of the university.
+* The App idea and design was part of the Mobile subject led by _Lidia Ivanova_ in the first semester of the second year of the university.
