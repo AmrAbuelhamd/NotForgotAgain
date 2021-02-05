@@ -22,8 +22,7 @@ A note Taking Application.
 
 ## Screenshots
 
-<img src="https://github.com/AmrAbuelhamd/NotForgotAgain/blob/master/screenshots/1.jpg" width=200 height=400/>
-<img src="https://github.com/AmrAbuelhamd/NotForgotAgain/blob/master/screenshots/2.jpg" width=200 height=400/>
+<img src="https://github.com/AmrAbuelhamd/NotForgotAgain/blob/master/screenshots/1.jpg" width=200 height=400/><img src="https://github.com/AmrAbuelhamd/NotForgotAgain/blob/master/screenshots/2.jpg" width=200 height=400/>
 <img src="https://github.com/AmrAbuelhamd/NotForgotAgain/blob/master/screenshots/3.jpg" width=200 height=400/>
 <img src="https://github.com/AmrAbuelhamd/NotForgotAgain/blob/master/screenshots/4.jpg" width=200 height=400/>
 
@@ -43,4 +42,4 @@ A note Taking Application.
 *	Used **Dependency injection (Hilt library)** and **Retrofit 2** library for REST API calls along with **Interceptor** for user token string.
 
 ## Credits
-* The App idea and design was part mobile subject which led by _Lidia Ivanova_ at the first semester of second year of the university.
+* The App idea and design was part of Mobile subject which led by _Lidia Ivanova_ at the first semester of second year of the university.
