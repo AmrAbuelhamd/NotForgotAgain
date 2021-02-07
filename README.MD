@@ -37,7 +37,7 @@ A note Taking Application.
 
 *	Used Kotlin and all the possible new android SDK components such **nav graph** and other UI components.
 
-*	Used **Room persistence library** for cashing user data in case there’s no internet.
+*	Used **Room persistence library** for caching user data in case there’s no internet.
 
 *	Followed **MVVM** app architecture.
 
